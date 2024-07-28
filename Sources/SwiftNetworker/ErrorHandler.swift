@@ -1,63 +1,109 @@
-//
-//  File.swift
-//  
-//
-//  Created by Lucas Silva on 28/07/24.
-//
-
 import Foundation
 
-public class ErrorHandler {
+/// A protocol defining the contract for error handling.
+protocol ErrorHandlerable {
+    /// Handles an error and its associated URL response, returning a `NetworkError`.
+    ///
+    /// - Parameters:
+    ///   - error: The error to handle.
+    ///   - response: The URL response associated with the error.
+    /// - Returns: A `NetworkError` representing the handled error.
+    func handle(_ error: Error?, data: Data?, response: URLResponse?) -> NetworkError
+}
+
+/// A class responsible for handling various types of errors and converting them into `NetworkError` instances.
+public class ErrorHandler: ErrorHandlerable {
     
+    /// Initializes a new instance of `ErrorHandler`.
     public init() {}
     
-    func handle(_ error: Error?, response: URLResponse?) -> NetworkError {
-        
-        if let error = error as? DecodingError {
-            switch error {
-            case .dataCorrupted(let context):
-                return NetworkError.decodingError(("Data corrupted: \(context.debugDescription)"))
-            case .keyNotFound(let key, let context):
-                return NetworkError.decodingError(("Key '\(key.stringValue)' not found: \(context.debugDescription), codingPath: \(context.codingPath)"))
-            case .typeMismatch(let type, let context):
-                return NetworkError.decodingError(("Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)"))
-            case .valueNotFound(let value, let context):
-                return NetworkError.decodingError(("Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)"))
-            @unknown default:
-                return .unknown(error)
-            }
-        }
-        
-        if let error = error as? URLError {
-            switch error.code {
-            case .timedOut:
-                return .timeOut
-            case .cannotFindHost, .cannotConnectToHost, .unsupportedURL, .badURL:
-                return .invalidURL
-            case .cancelled:
-                return .requestCanceled("The request was canceled.")
-            default:
-                return .networkError(error)
-            }
-        }
+    
+    /// Handles an error and its associated URL response, returning a `NetworkError`.
+    ///
+    /// - Parameters:
+    ///   - error: The error to handle.
+    ///   - response: The URL response associated with the error.
+    /// - Returns: A `NetworkError` representing the handled error.
+    public func handle(_ error: Error?, data: Data?, response: URLResponse?) -> NetworkError {
         
         if let httpResponse = response as? HTTPURLResponse {
             if HTTPStatusCode.isClientError(httpResponse.statusCode) {
-                return handleClientError(httpResponse.statusCode)
+                return createNetworkError(data: data, errorCase: handleClientError(httpResponse.statusCode))
             } else if HTTPStatusCode.isServerError(httpResponse.statusCode) {
-                return handleServerError(httpResponse.statusCode)
+                return createNetworkError(data: data, errorCase: handleServerError(httpResponse.statusCode))
+            } else if HTTPStatusCode.isRedirection(httpResponse.statusCode) {
+                return createNetworkError(data: data, errorCase: handleRedirectionError(httpResponse.statusCode))
             }
         }
-
+        
+        switch error {
+        case let decodingError as DecodingError:
+            return createNetworkError(data: data, errorCase: handleDecodingError(decodingError))
+        case let urlError as URLError:
+            return createNetworkError(data: data, errorCase: handleURLError(urlError))
+        default:
+            return createNetworkError(data: data, errorCase: handleUnknownError(error))
+        }
+    }
+    
+    /// Handles a `DecodingError` and returns a corresponding `NetworkError`.
+    ///
+    /// - Parameter error: The `DecodingError` to handle.
+    /// - Returns: A `NetworkError` representing the decoding error.
+    private func handleDecodingError(_ error: DecodingError) -> NetworkErrorCases {
+        switch error {
+        case .dataCorrupted(let context):
+            return .decodingError("Data corrupted: \(context.debugDescription)")
+        case .keyNotFound(let key, let context):
+            return .decodingError("Key '\(key.stringValue)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
+        case .typeMismatch(let type, let context):
+            return .decodingError("Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)")
+        case .valueNotFound(let value, let context):
+            return .decodingError("Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)")
+        @unknown default:
+            return .unknown(error)
+        }
+    }
+    
+    /// Handles a `URLError` and returns a corresponding `NetworkError`.
+    ///
+    /// - Parameter error: The `URLError` to handle.
+    /// - Returns: A `NetworkError` representing the URL error.
+    private func handleURLError(_ error: URLError) -> NetworkErrorCases {
+        switch error.code {
+        case .timedOut:
+            return .timeOut
+        case .cannotFindHost, .cannotConnectToHost, .unsupportedURL, .badURL:
+            return .invalidURL
+        case .cancelled:
+            return .requestCanceled("The request was canceled.")
+        default:
+            return .networkError(error)
+        }
+    }
+    
+    func createNetworkError(data: Data?, errorCase: NetworkErrorCases) -> NetworkError {
+        let apiErrorMessage = data.flatMap { String(data: $0, encoding: .utf8) }
+        return NetworkError(errorCase: errorCase, apiErrorMessage: apiErrorMessage)
+    }
+    
+    /// Handles an unknown error, returning a corresponding `NetworkError`.
+    ///
+    /// - Parameter error: The unknown error to handle.
+    /// - Returns: A `NetworkError` representing the unknown error.
+    private func handleUnknownError(_ error: Error?) -> NetworkErrorCases {
         if let error = error {
             return .unknown(error)
         } else {
-            return .unknown(NSError(domain: "", code: -1, userInfo: nil))
+            return .unknown(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unknown error occurred."]))
         }
     }
-
     
-    func handleClientError(_ statusCode: Int) -> NetworkError {
+    /// Handles a client error (4xx status code) and returns a corresponding `NetworkError`.
+    ///
+    /// - Parameter statusCode: The HTTP status code to handle.
+    /// - Returns: A `NetworkError` representing the client error.
+    private func handleClientError(_ statusCode: Int) -> NetworkErrorCases {
         if let status = HTTPStatusCode.from(statusCode) {
             switch status {
             case .badRequest:
@@ -74,8 +120,12 @@ public class ErrorHandler {
         }
         return .unknown(NSError(domain: "", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "Client error with status code \(statusCode)."]))
     }
-
-    func handleServerError(_ statusCode: Int) -> NetworkError {
+    
+    /// Handles a server error (5xx status code) and returns a corresponding `NetworkError`.
+    ///
+    /// - Parameter statusCode: The HTTP status code to handle.
+    /// - Returns: A `NetworkError` representing the server error.
+    private func handleServerError(_ statusCode: Int) -> NetworkErrorCases {
         if let status = HTTPStatusCode.from(statusCode) {
             switch status {
             case .internalServerError:
@@ -92,6 +142,35 @@ public class ErrorHandler {
         }
         return .unknown(NSError(domain: "", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "Server error with status code \(statusCode)."]))
     }
-
     
+    /// Handles a redirection (3xx status code) and returns a corresponding `NetworkError`.
+    ///
+    /// - Parameter statusCode: The HTTP status code to handle.
+    /// - Returns: A `NetworkError` representing the redirection.
+    private func handleRedirectionError(_ statusCode: Int) -> NetworkErrorCases {
+        if let status = HTTPStatusCode.from(statusCode) {
+            switch status {
+            case .multipleChoices:
+                return .multipleChoices("Multiple choices available.")
+            case .movedPermanently:
+                return .movedPermanently("The resource has been moved permanently.")
+            case .found:
+                return .found("The resource has been found at a different location.")
+            case .seeOther:
+                return .seeOther("See other resource.")
+            case .notModified:
+                return .notModified("The resource has not been modified.")
+            case .useProxy:
+                return .useProxy("The resource is accessible only through a proxy.")
+            case .temporaryRedirect:
+                return .temporaryRedirect("The resource is temporarily located at a different location.")
+            case .permanentRedirect:
+                return .permanentRedirect("The resource is permanently located at a different location.")
+            default:
+                return .unknown(NSError(domain: "", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "Redirection with status code \(statusCode)."]))
+            }
+        }
+        return .unknown(NSError(domain: "", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "Redirection with status code \(statusCode)."]))
+    }
 }
+

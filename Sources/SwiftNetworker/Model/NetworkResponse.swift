@@ -9,5 +9,5 @@ import Foundation
 
 public struct NetworkResponse {
     public let data: Data
-    public let response: URLResponse
+    public let URLResponse: URLResponse
 }

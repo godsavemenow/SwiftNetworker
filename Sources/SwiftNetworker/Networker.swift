@@ -29,21 +29,22 @@ public class Networker {
             guard let self else { return }
             
             if let error = error {
-                let customError = errorHandler.handle(error, response: response)
+                let customError = errorHandler.handle(error, data: data, response: response)
                 logger.logError(customError)
                 completion(.failure(customError))
                 return
             }
             
             guard let data = data, let response = response else {
-                let customError: NetworkError = .noData
+                let customError = errorHandler.createNetworkError(data: data, errorCase: .noData)
+                
                 logger.logError(customError)
                 completion(.failure(customError))
                 return
             }
             
             if let httpResponse = response as? HTTPURLResponse, !HTTPStatusCode.isSuccessful(httpResponse.statusCode) {
-                let error = errorHandler.handle(nil, response: response)
+                let error = errorHandler.handle(nil, data: data, response: response)
                 logger.logError(error)
                 completion(.failure(error))
                 return
@@ -111,7 +112,7 @@ public class Networker {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
             guard let httpResponse = response as? HTTPURLResponse, HTTPStatusCode.isSuccessful(httpResponse.statusCode) else {
-                let customError = errorHandler.handle(nil, response: response)
+                let customError = errorHandler.handle(nil, data: data, response: response)
                 logger.logError(customError)
                 return .failure(customError)
             }
@@ -120,7 +121,7 @@ public class Networker {
             logger.logResponse(networkResponse)
             return .success(networkResponse)
         } catch let error {
-            let customError = errorHandler.handle(error, response: nil)
+            let customError = errorHandler.handle(error, data: nil, response: nil)
             logger.logError(customError)
             return .failure(customError)
         }
@@ -134,7 +135,7 @@ public class Networker {
             let response = Response(networkResponse: networkResponse, decodedResponse: decodedObject)
             return .success(response)
         } catch let error {
-            let customError = errorHandler.handle(error, response: nil)
+            let customError = errorHandler.handle(error, data: nil, response: nil)
             logger.logError(customError)
             return .failure(customError)
         }

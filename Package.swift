@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "Swift-Networker",
+    name: "SwiftNetworker",
     platforms: [
         .macOS(.v10_13),
              .iOS(.v11)
@@ -12,8 +12,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "Swift-Networker",
-            targets: ["Swift-Networker"]
+            name: "SwiftNetworker",
+            targets: ["SwiftNetworker"]
         )
     ],
     dependencies: [
@@ -24,10 +24,10 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "Swift-Networker",
+            name: "SwiftNetworker",
             dependencies: []),
         .testTarget(
-            name: "Swift-NetworkerTests",
-            dependencies: ["Swift-Networker"]),
+            name: "SwiftNetworkerTests",
+            dependencies: ["SwiftNetworker"]),
     ]
 )

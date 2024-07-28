@@ -12,6 +12,22 @@ public class ErrorHandler {
     public init() {}
     
     func handle(_ error: Error?, response: URLResponse?) -> NetworkError {
+        
+        if let error = error as? DecodingError {
+            switch error {
+            case .dataCorrupted(let context):
+                return NetworkError.decodingError(("Data corrupted: \(context.debugDescription)"))
+            case .keyNotFound(let key, let context):
+                return NetworkError.decodingError(("Key '\(key.stringValue)' not found: \(context.debugDescription), codingPath: \(context.codingPath)"))
+            case .typeMismatch(let type, let context):
+                return NetworkError.decodingError(("Type '\(type)' mismatch: \(context.debugDescription), codingPath: \(context.codingPath)"))
+            case .valueNotFound(let value, let context):
+                return NetworkError.decodingError(("Value '\(value)' not found: \(context.debugDescription), codingPath: \(context.codingPath)"))
+            @unknown default:
+                return .unknown(error)
+            }
+        }
+        
         if let error = error as? URLError {
             switch error.code {
             case .timedOut:

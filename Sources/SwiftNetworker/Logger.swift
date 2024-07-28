@@ -24,27 +24,22 @@ public class Logger {
         print("---------------\n")
     }
     
-    func logResponse<T: Decodable>(_ response: Response<T>) {
+    func logResponse(_ response: NetworkResponse) {
         print("\n--- Response ---")
-        print("URL: \(response.networkResponse.response.url?.absoluteString ?? "Unknown URL")")
-        if let httpResponse = response.networkResponse.response as? HTTPURLResponse {
+        print("URL: \(response.URLResponse.url?.absoluteString ?? "Unknown URL")")
+        if let httpResponse = response.URLResponse as? HTTPURLResponse {
             print("Status Code: \(httpResponse.statusCode)")
             print("Headers: \(httpResponse.allHeaderFields)")
         }
-        if let responseString = String(data: response.networkResponse.data, encoding: .utf8) {
+        if let responseString = String(data: response.data, encoding: .utf8) {
             print("Body: \(responseString)")
-        }
-        
-        if let decodedResponse = response.decodedResponse {
-            print("\n--- Decoded Response ---")
-            print(decodedResponse)
         }
         print("----------------\n")
     }
     
-    func logError(_ error: Error) {
+    func logError(_ error: NetworkError) {
         print("\n--- Error ---")
-        print("Description: \(error.localizedDescription)")
+        print("Description: \(error.description)")
         print("-------------\n")
     }
 }

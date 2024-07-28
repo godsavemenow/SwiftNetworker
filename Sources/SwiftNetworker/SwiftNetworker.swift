@@ -19,7 +19,7 @@ public class Networker {
         self.logger = logger
     }
     
-    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T?, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
+    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type?, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
         let urlRequest = setURLRequest(request)
         
         logger.logRequest(urlRequest)
@@ -58,7 +58,7 @@ public class Networker {
 
     
     @available(iOS 15.0, macOS 12.0, *)
-    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T?) async -> Result<Response<T>, NetworkError> {
+    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type?) async -> Result<Response<T>, NetworkError> {
         let urlRequest = setURLRequest(request)
         
         do {
@@ -80,7 +80,7 @@ public class Networker {
         }
     }
     
-    private func handleResponse<T: Decodable>(networkResponse: NetworkResponse, responseModel: T?) -> Result<Response<T>, NetworkError> {
+    private func handleResponse<T: Decodable>(networkResponse: NetworkResponse, responseModel: T.Type?) -> Result<Response<T>, NetworkError> {
         guard let _ = responseModel else {
             return .success(Response(networkResponse: networkResponse, decodedResponse: nil))
         }

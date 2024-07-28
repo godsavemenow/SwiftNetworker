@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+public struct Response <T: Decodable> {
+    let networkResponse: NetworkResponse
+    let decodedResponse: T?
+}

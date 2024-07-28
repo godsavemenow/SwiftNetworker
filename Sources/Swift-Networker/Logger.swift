@@ -7,7 +7,10 @@
 
 import Foundation
 
-class Logger {
+public class Logger {
+    
+    public init() {}
+
     func logRequest(_ request: URLRequest) {
         print("\n--- Request ---")
         print("Method: \(request.httpMethod ?? "Unknown Method")")

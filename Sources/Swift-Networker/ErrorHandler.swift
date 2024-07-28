@@ -7,9 +7,11 @@
 
 import Foundation
 
-class ErrorHandler {
+public class ErrorHandler {
     
-    internal func handle(_ error: Error?, response: URLResponse?) -> NetworkError {
+    public init() {}
+    
+    func handle(_ error: Error?, response: URLResponse?) -> NetworkError {
         if let error = error as? URLError {
             switch error.code {
             case .timedOut:
@@ -39,7 +41,7 @@ class ErrorHandler {
     }
 
     
-    internal func handleClientError(_ statusCode: Int) -> NetworkError {
+    func handleClientError(_ statusCode: Int) -> NetworkError {
         if let status = HTTPStatusCode.from(statusCode) {
             switch status {
             case .badRequest:
@@ -57,7 +59,7 @@ class ErrorHandler {
         return .unknown(NSError(domain: "", code: statusCode, userInfo: [NSLocalizedDescriptionKey: "Client error with status code \(statusCode)."]))
     }
 
-    internal func handleServerError(_ statusCode: Int) -> NetworkError {
+    func handleServerError(_ statusCode: Int) -> NetworkError {
         if let status = HTTPStatusCode.from(statusCode) {
             switch status {
             case .internalServerError:

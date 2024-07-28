@@ -12,7 +12,7 @@ public class Networker {
     let errorHandler: ErrorHandler
     let logger: Logger
     
-    init(errorHandler: ErrorHandler = ErrorHandler(),
+    public init(errorHandler: ErrorHandler = ErrorHandler(),
          logger: Logger = Logger()
     ) {
         self.errorHandler = errorHandler

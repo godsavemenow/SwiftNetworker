@@ -19,7 +19,7 @@ public class Networker {
         self.logger = logger
     }
     
-    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type?, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
+    private func execute(callSync request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
         let urlRequest = setURLRequest(request)
         
         logger.logRequest(urlRequest)
@@ -29,8 +29,9 @@ public class Networker {
             guard let self else { return }
             
             if let error = error {
-                logger.logError(error)
-                completion(.failure(errorHandler.handle(error, response: response)))
+                let customError = errorHandler.handle(error, response: response)
+                logger.logError(customError)
+                completion(.failure(customError))
                 return
             }
             
@@ -48,19 +49,64 @@ public class Networker {
                 return
             }
             
-            let networkResponse = NetworkResponse(data: data, response: response)
-            let responses = handleResponse(networkResponse: networkResponse, responseModel: responseModel.self)
-            completion(responses)
+            let networkResponse = NetworkResponse(data: data, URLResponse: response)
+            logger.logResponse(networkResponse)
+
+            completion(.success(networkResponse))
         }
         
         task.resume()
     }
+    
+    public func perform(_ request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
+        execute(callSync: request) { result in
+            completion(result)
+        }
+    }
+    
+    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
+        
+        execute(callSync: request) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let response):
+                let result = self.handleResponse(
+                    networkResponse: response,
+                    responseModel: T.self)
+                completion(
+                    result
+                )
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
 
+    @available(iOS 15.0, macOS 12.0, *)
+    public func perform(async request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
+        return await execute(callAsync: request)
+    }
     
     @available(iOS 15.0, macOS 12.0, *)
-    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type?) async -> Result<Response<T>, NetworkError> {
-        let urlRequest = setURLRequest(request)
+    public func perform<T: Decodable>(async request: NetworkRequest, responseModel: T.Type) async -> (Result<Response<T>, NetworkError>) {
+        let result = await execute(callAsync: request)
         
+        switch result {
+        case .success(let response):
+            return self.handleResponse(
+                    networkResponse: response,
+                    responseModel: T.self
+            )
+        case .failure(let error):
+            return .failure(error)
+        }
+    }
+    
+    @available(iOS 15.0, macOS 12.0, *)
+    private func execute(callAsync request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
+        let urlRequest = setURLRequest(request)
+        logger.logRequest(urlRequest)
+
         do {
             let (data, response) = try await URLSession.shared.data(for: urlRequest)
             
@@ -70,9 +116,9 @@ public class Networker {
                 return .failure(customError)
             }
             
-            let networkResponse = NetworkResponse(data: data, response: response)
-            let responses = handleResponse(networkResponse: networkResponse, responseModel: responseModel.self)
-            return responses
+            let networkResponse = NetworkResponse(data: data, URLResponse: response)
+            logger.logResponse(networkResponse)
+            return .success(networkResponse)
         } catch let error {
             let customError = errorHandler.handle(error, response: nil)
             logger.logError(customError)
@@ -80,18 +126,16 @@ public class Networker {
         }
     }
     
-    private func handleResponse<T: Decodable>(networkResponse: NetworkResponse, responseModel: T.Type?) -> Result<Response<T>, NetworkError> {
-        guard let _ = responseModel else {
-            return .success(Response(networkResponse: networkResponse, decodedResponse: nil))
-        }
+    private func handleResponse<T: Decodable>(networkResponse: NetworkResponse, responseModel: T.Type) -> Result<Response<T>, NetworkError> {
+
         let decoder = JSONDecoder()
         do {
             let decodedObject = try decoder.decode(T.self, from: networkResponse.data)
             let response = Response(networkResponse: networkResponse, decodedResponse: decodedObject)
-            logger.logResponse(response)
             return .success(response)
         } catch let error {
             let customError = errorHandler.handle(error, response: nil)
+            logger.logError(customError)
             return .failure(customError)
         }
     }

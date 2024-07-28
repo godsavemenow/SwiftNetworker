@@ -18,6 +18,7 @@ public enum NetworkError: Error, CustomStringConvertible {
     case serverError(String)
     case parsingError(String)
     case requestCanceled(String)
+    case decodingError(String)
     case networkError(Error)
     case unknown(Error)
     
@@ -43,10 +44,13 @@ public enum NetworkError: Error, CustomStringConvertible {
             return "Parsing Error: \(message)"
         case .requestCanceled(let message):
             return "Request Canceled: \(message)"
+        case .decodingError(let message):
+            return "Decoding Error: \(message)"
         case .networkError(let error):
             return "Network Error: \(error.localizedDescription)"
         case .unknown(let error):
             return "Unknown Error: \(error.localizedDescription)"
+
         }
     }
 }

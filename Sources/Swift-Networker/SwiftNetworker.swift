@@ -81,7 +81,9 @@ public class Networker {
     }
     
     private func handleResponse<T: Decodable>(networkResponse: NetworkResponse, responseModel: T?) -> Result<Response<T>, NetworkError> {
-        
+        guard let _ = responseModel else {
+            return .success(Response(networkResponse: networkResponse, decodedResponse: nil))
+        }
         let decoder = JSONDecoder()
         do {
             let decodedObject = try decoder.decode(T.self, from: networkResponse.data)

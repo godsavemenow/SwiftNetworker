@@ -17,5 +17,5 @@ Swift-Networker is available through the Swift Package Manager (SPM). To add it 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/your-username/swift-networker.git", from: "1.0.0")
+    .package(url: "https://github.com/godsavemenow/swift-networker.git", from: "1.0.0")
 ]

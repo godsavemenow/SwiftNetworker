@@ -35,6 +35,7 @@ jobs:
         flags: unittests
         name: codecov-report
         fail_ci_if_error: true
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Install SwiftDoc
       run: brew install swiftdocorg/swift-doc/swift-doc

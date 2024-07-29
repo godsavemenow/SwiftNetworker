@@ -18,11 +18,11 @@ jobs:
       run: swift build -v
 
     - name: Run tests
-      run: swift test --enable-code-coverage -v
+      run: swift test --enable-code-coverage -v --parallel --result-bundle-path TestResults
 
     - name: Generate code coverage report
       run: |
-        xcrun xccov view --report --json $(find . -name "*.xcresult") > coverage.json
+        xcrun xccov view --report --json TestResults.xcresult > coverage.json
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

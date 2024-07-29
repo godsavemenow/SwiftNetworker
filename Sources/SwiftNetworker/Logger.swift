@@ -19,7 +19,7 @@ public class Logger: LoggerProtocol {
     ///   - logLevel: The level of logging desired. Default is `.info`.
     ///   - isSilent: Boolean to determine if the logger should print. Default is `false`.
     ///   - logOutput: Closure to handle the log output. Default is `print`.
-    public init(logLevel: LogLevel = .info, isSilent: Bool = false, logOutput: @escaping (String) -> Void = { print($0) }) {
+    public init(logLevel: LogLevel = .debug, isSilent: Bool = false, logOutput: @escaping (String) -> Void = { print($0) }) {
         self.logLevel = logLevel
         self.isSilent = isSilent
         self.logOutput = logOutput
@@ -77,7 +77,7 @@ public class Logger: LoggerProtocol {
     /// - Parameter error: The network error to be logged.
     func logError(_ error: NetworkError) {
         guard !isSilent else { return }
-        guard logLevel == .error else { return }
+        guard logLevel == .error || logLevel == .debug else { return }
         var logMessage = "\n--- Error ---\n"
         logMessage += "Description: \(error.detailedDescription)\n"
         logMessage += "-------------\n"

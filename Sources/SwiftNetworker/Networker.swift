@@ -7,7 +7,7 @@ public class Networker: NetworkerProtocol {
     private let logger: Logger
     private var tasks: [UUID: URLSessionTask] = [:]
     private let queue = DispatchQueue(label: "com.networker.taskQueue")
-    private var isLocked = false
+    private let lockSemaphore = DispatchSemaphore(value: 1)
 
     /// Singleton instance
     public static let shared = Networker()
@@ -46,16 +46,12 @@ public class Networker: NetworkerProtocol {
     
     /// Locks the Networker class to prevent new requests from being made.
     public func lock() {
-        queue.sync {
-            isLocked = true
-        }
+        lockSemaphore.wait()
     }
     
     /// Unlocks the Networker class to allow new requests to be made.
     public func unlock() {
-        queue.sync {
-            isLocked = false
-        }
+        lockSemaphore.signal()
     }
     
     // MARK: - Simple Requests
@@ -65,12 +61,7 @@ public class Networker: NetworkerProtocol {
     ///   - request: The network request to be made.
     ///   - completion: A closure that handles the result of the request.
     public func perform(_ request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
-        queue.sync {
-            guard !isLocked else {
-                completion(.failure(NetworkError(errorCase: .locked, apiErrorMessage: "Networker is locked.")))
-                return
-            }
-        }
+        lockSemaphore.wait()
         
         let taskId = UUID()
         let task = execute(request: request) { [weak self] result in
@@ -78,6 +69,7 @@ public class Networker: NetworkerProtocol {
                 _ = self?.tasks.removeValue(forKey: taskId)
             }
             completion(result)
+            self?.lockSemaphore.signal()
         }
         queue.sync {
             tasks[taskId] = task
@@ -111,12 +103,7 @@ public class Networker: NetworkerProtocol {
     ///   - data: The data to be uploaded.
     ///   - completion: A closure that handles the result of the request.
     public func performUpload(_ request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
-        queue.sync {
-            guard !isLocked else {
-                completion(.failure(NetworkError(errorCase: .locked, apiErrorMessage: "Networker is locked.")))
-                return
-            }
-        }
+        lockSemaphore.wait()
         
         let taskId = UUID()
         let task = executeUpload(request: request, data: data) { [weak self] result in
@@ -124,6 +111,7 @@ public class Networker: NetworkerProtocol {
                 _ = self?.tasks.removeValue(forKey: taskId)
             }
             completion(result)
+            self?.lockSemaphore.signal()
         }
         queue.sync {
             tasks[taskId] = task
@@ -138,12 +126,7 @@ public class Networker: NetworkerProtocol {
     ///   - request: The download request to be made.
     ///   - completion: A closure that handles the result of the request.
     public func performDownload(_ request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) {
-        queue.sync {
-            guard !isLocked else {
-                completion(.failure(NetworkError(errorCase: .locked, apiErrorMessage: "Networker is locked.")))
-                return
-            }
-        }
+        lockSemaphore.wait()
         
         let taskId = UUID()
         let task = executeDownload(request: request) { [weak self] result in
@@ -151,6 +134,7 @@ public class Networker: NetworkerProtocol {
                 _ = self?.tasks.removeValue(forKey: taskId)
             }
             completion(result)
+            self?.lockSemaphore.signal()
         }
         queue.sync {
             tasks[taskId] = task

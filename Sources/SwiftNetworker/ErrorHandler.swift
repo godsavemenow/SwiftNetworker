@@ -1,18 +1,7 @@
 import Foundation
 
-/// A protocol defining the contract for error handling.
-protocol ErrorHandlerable {
-    /// Handles an error and its associated URL response, returning a `NetworkError`.
-    ///
-    /// - Parameters:
-    ///   - error: The error to handle.
-    ///   - response: The URL response associated with the error.
-    /// - Returns: A `NetworkError` representing the handled error.
-    func handle(_ error: Error?, data: Data?, response: URLResponse?) -> NetworkError
-}
-
 /// A class responsible for handling various types of errors and converting them into `NetworkError` instances.
-public class ErrorHandler: ErrorHandlerable {
+public class ErrorHandler: ErrorHandlerProtocol {
     
     /// Initializes a new instance of `ErrorHandler`.
     public init() {}

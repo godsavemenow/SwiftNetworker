@@ -1,137 +1,258 @@
-//
-//  SwiftNetworker.swift
-//  
-//
-//  Created by Lucas Silva
-//
-
 import Foundation
 
-public class Networker {
+/// A class responsible for making network requests and handling responses.
+public class Networker: NetworkerProtocol {
     
-    let errorHandler: ErrorHandler
-    let logger: Logger
+    private let errorHandler: ErrorHandlerProtocol
+    private let logger: Logger
+    private var tasks: [UUID: URLSessionTask] = [:]
+    private let queue = DispatchQueue(label: "com.networker.taskQueue")
+    private let lockSemaphore = DispatchSemaphore(value: 1)
+
+    /// Singleton instance
+    public static let shared = Networker()
     
-    public init(errorHandler: ErrorHandler = ErrorHandler(),
-         logger: Logger = Logger()
-    ) {
+    /// Initializes the Networker with optional error handler and logger.
+    /// - Parameters:
+    ///   - errorHandler: An instance of ErrorHandler for handling errors.
+    ///   - logger: An instance of Logger for logging requests and responses.
+    public init(errorHandler: ErrorHandlerProtocol = ErrorHandler(), logger: Logger = Logger()) {
         self.errorHandler = errorHandler
         self.logger = logger
     }
     
-    private func execute(callSync request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
-        let urlRequest = setURLRequest(request)
-        
-        logger.logRequest(urlRequest)
-        
-        let task = URLSession.shared.dataTask(with: urlRequest) { [weak self]
-            data, response, error in
-            guard let self else { return }
-            
-            if let error = error {
-                let customError = errorHandler.handle(error, data: data, response: response)
-                logger.logError(customError)
-                completion(.failure(customError))
-                return
-            }
-            
-            guard let data = data, let response = response else {
-                let customError = errorHandler.createNetworkError(data: data, errorCase: .noData)
-                
-                logger.logError(customError)
-                completion(.failure(customError))
-                return
-            }
-            
-            if let httpResponse = response as? HTTPURLResponse, !HTTPStatusCode.isSuccessful(httpResponse.statusCode) {
-                let error = errorHandler.handle(nil, data: data, response: response)
-                logger.logError(error)
-                completion(.failure(error))
-                return
-            }
-            
-            let networkResponse = NetworkResponse(data: data, URLResponse: response)
-            logger.logResponse(networkResponse)
-
-            completion(.success(networkResponse))
+    // MARK: - Task Management
+    
+    /// Cancels a task with a given UUID.
+    /// - Parameter taskId: The UUID of the task to be cancelled.
+    public func cancelTask(withId taskId: UUID) {
+        queue.sync {
+            tasks[taskId]?.cancel()
+            tasks.removeValue(forKey: taskId)
         }
+    }
+    
+    /// Cancels all tasks.
+    public func cancelAllTasks() {
+        queue.sync {
+            for (_, task) in tasks {
+                task.cancel()
+            }
+            tasks.removeAll()
+        }
+    }
+    
+    // MARK: - Lock Management
+    
+    /// Locks the Networker class to prevent new requests from being made.
+    public func lock() {
+        lockSemaphore.wait()
+    }
+    
+    /// Unlocks the Networker class to allow new requests to be made.
+    public func unlock() {
+        lockSemaphore.signal()
+    }
+    
+    // MARK: - Simple Requests
+    
+    /// Performs a simple network request with a completion handler.
+    /// - Parameters:
+    ///   - request: The network request to be made.
+    ///   - completion: A closure that handles the result of the request.
+    public func perform(_ request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
+        lockSemaphore.wait()
         
+        let taskId = UUID()
+        let task = execute(request: request) { [weak self] result in
+            self?.queue.sync {
+                _ = self?.tasks.removeValue(forKey: taskId)
+            }
+            completion(result)
+            self?.lockSemaphore.signal()
+        }
+        queue.sync {
+            tasks[taskId] = task
+        }
         task.resume()
     }
     
-    public func perform(_ request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
-        execute(callSync: request) { result in
-            completion(result)
-        }
-    }
+    // MARK: - Decodable Responses
     
+    /// Performs a network request and decodes the response into a specified model type with a completion handler.
+    /// - Parameters:
+    ///   - request: The network request to be made.
+    ///   - responseModel: The type to decode the response into.
+    ///   - completion: A closure that handles the result of the request.
     public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
-        
-        execute(callSync: request) { [weak self] result in
-            guard let self else { return }
+        perform(request) { result in
             switch result {
             case .success(let response):
-                let result = self.handleResponse(
-                    networkResponse: response,
-                    responseModel: T.self)
-                completion(
-                    result
-                )
+                completion(self.decodeResponse(response, to: responseModel))
             case .failure(let error):
                 completion(.failure(error))
             }
         }
     }
-
-    @available(iOS 15.0, macOS 12.0, *)
-    public func perform(async request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
-        return await execute(callAsync: request)
-    }
     
-    @available(iOS 15.0, macOS 12.0, *)
-    public func perform<T: Decodable>(async request: NetworkRequest, responseModel: T.Type) async -> (Result<Response<T>, NetworkError>) {
-        let result = await execute(callAsync: request)
+    // MARK: - Upload Requests
+    
+    /// Performs an upload request with a completion handler.
+    /// - Parameters:
+    ///   - request: The upload request to be made.
+    ///   - data: The data to be uploaded.
+    ///   - completion: A closure that handles the result of the request.
+    public func performUpload(_ request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
+        lockSemaphore.wait()
         
-        switch result {
-        case .success(let response):
-            return self.handleResponse(
-                    networkResponse: response,
-                    responseModel: T.self
-            )
-        case .failure(let error):
-            return .failure(error)
-        }
-    }
-    
-    @available(iOS 15.0, macOS 12.0, *)
-    private func execute(callAsync request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
-        let urlRequest = setURLRequest(request)
-        logger.logRequest(urlRequest)
-
-        do {
-            let (data, response) = try await URLSession.shared.data(for: urlRequest)
-            
-            guard let httpResponse = response as? HTTPURLResponse, HTTPStatusCode.isSuccessful(httpResponse.statusCode) else {
-                let customError = errorHandler.handle(nil, data: data, response: response)
-                logger.logError(customError)
-                return .failure(customError)
+        let taskId = UUID()
+        let task = executeUpload(request: request, data: data) { [weak self] result in
+            self?.queue.sync {
+                _ = self?.tasks.removeValue(forKey: taskId)
             }
-            
-            let networkResponse = NetworkResponse(data: data, URLResponse: response)
-            logger.logResponse(networkResponse)
-            return .success(networkResponse)
-        } catch let error {
-            let customError = errorHandler.handle(error, data: nil, response: nil)
-            logger.logError(customError)
-            return .failure(customError)
+            completion(result)
+            self?.lockSemaphore.signal()
         }
+        queue.sync {
+            tasks[taskId] = task
+        }
+        task.resume()
     }
     
-    private func handleResponse<T: Decodable>(networkResponse: NetworkResponse, responseModel: T.Type) -> Result<Response<T>, NetworkError> {
-
-        let decoder = JSONDecoder()
+    // MARK: - Download Requests
+    
+    /// Performs a download request with a completion handler.
+    /// - Parameters:
+    ///   - request: The download request to be made.
+    ///   - completion: A closure that handles the result of the request.
+    public func performDownload(_ request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) {
+        lockSemaphore.wait()
+        
+        let taskId = UUID()
+        let task = executeDownload(request: request) { [weak self] result in
+            self?.queue.sync {
+                _ = self?.tasks.removeValue(forKey: taskId)
+            }
+            completion(result)
+            self?.lockSemaphore.signal()
+        }
+        queue.sync {
+            tasks[taskId] = task
+        }
+        task.resume()
+    }
+    
+    // MARK: - Private Methods
+    
+    /// Executes a network request with a completion handler.
+    /// - Parameters:
+    ///   - request: The network request to be executed.
+    ///   - completion: A closure that handles the result of the request.
+    /// - Returns: The URLSessionDataTask associated with the request.
+    private func execute(request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) -> URLSessionDataTask {
+        let urlRequest = Commons.makeURLRequest(from: request)
+        logger.logRequest(urlRequest)
+        
+        let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, error in
+            self?.handleResponse(data: data, response: response, error: error, completion: completion)
+        }
+        
+        return task
+    }
+    
+    /// Executes an upload request with a completion handler.
+    /// - Parameters:
+    ///   - request: The upload request to be executed.
+    ///   - data: The data to be uploaded.
+    ///   - completion: A closure that handles the result of the request.
+    /// - Returns: The URLSessionUploadTask associated with the request.
+    private func executeUpload(request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) -> URLSessionUploadTask {
+        let urlRequest = Commons.makeURLRequest(from: request)
+        logger.logRequest(urlRequest)
+        
+        let task = URLSession.shared.uploadTask(with: urlRequest, from: data) { [weak self] data, response, error in
+            self?.handleResponse(data: data, response: response, error: error, completion: completion)
+        }
+        
+        return task
+    }
+    
+    /// Executes a download request with a completion handler.
+    /// - Parameters:
+    ///   - request: The download request to be executed.
+    ///   - completion: A closure that handles the result of the request.
+    /// - Returns: The URLSessionDownloadTask associated with the request.
+    private func executeDownload(request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) -> URLSessionDownloadTask {
+        let urlRequest = Commons.makeURLRequest(from: request)
+        logger.logRequest(urlRequest)
+        
+        let task = URLSession.shared.downloadTask(with: urlRequest) { [weak self] url, response, error in
+            self?.handleDownloadResponse(url: url, response: response, error: error, completion: completion)
+        }
+        
+        return task
+    }
+    
+    /// Handles the response for a network request with a completion handler.
+    /// - Parameters:
+    ///   - data: The data received from the network request.
+    ///   - response: The URL response received from the network request.
+    ///   - error: The error received from the network request.
+    ///   - completion: A closure that handles the result of the network request.
+    private func handleResponse(data: Data?, response: URLResponse?, error: Error?, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
+        if let error = error {
+            Commons.handleRequestError(error, data: data, response: response, logger: logger, errorHandler: errorHandler, completion: completion)
+            return
+        }
+        
+        guard let data = data, let response = response else {
+            completion(.failure(NetworkError(errorCase: .noData, apiErrorMessage: nil)))
+            return
+        }
+        
+        if let httpResponse = response as? HTTPURLResponse, !HTTPStatusCode.isSuccessful(httpResponse.statusCode) {
+            Commons.handleRequestError(nil, data: data, response: response, logger: logger, errorHandler: errorHandler, completion: completion)
+            return
+        }
+        
+        let networkResponse = NetworkResponse(data: data, URLResponse: response)
+        logger.logResponse(networkResponse)
+        completion(.success(networkResponse))
+    }
+    
+    /// Handles the response for a download request with a completion handler.
+    /// - Parameters:
+    ///   - url: The URL of the downloaded file.
+    ///   - response: The URL response received from the download request.
+    ///   - error: The error received from the download request.
+    ///   - completion: A closure that handles the result of the download request.
+    private func handleDownloadResponse(url: URL?, response: URLResponse?, error: Error?, completion: @escaping (Result<URL, NetworkError>) -> Void) {
+        if let error = error {
+            let customError = errorHandler.handle(error, data: nil, response: response)
+            logger.logError(customError)
+            completion(.failure(customError))
+            return
+        }
+        
+        guard let url = url else {
+            let customError = NetworkError(errorCase: .noData, apiErrorMessage: nil)
+            logger.logError(customError)
+            completion(.failure(customError))
+            return
+        }
+        
+        logger.logResponse("Success", message: "Download Finished")
+        completion(.success(url))
+    }
+    
+    /// Decodes the response data into a specified model type.
+    /// - Parameters:
+    ///   - networkResponse: The network response containing the data to be decoded.
+    ///   - responseModel: The type to decode the response into.
+    /// - Returns: A result containing either the decoded response or a network error.
+    private func decodeResponse<T: Decodable>(_ networkResponse: NetworkResponse, to responseModel: T.Type) -> Result<Response<T>, NetworkError> {
         do {
-            let decodedObject = try decoder.decode(T.self, from: networkResponse.data)
+            let decodedObject = try JSONDecoder().decode(T.self, from: networkResponse.data)
             let response = Response(networkResponse: networkResponse, decodedResponse: decodedObject)
             return .success(response)
         } catch let error {
@@ -139,14 +260,5 @@ public class Networker {
             logger.logError(customError)
             return .failure(customError)
         }
-    }
-        
-    private func setURLRequest(_ request: NetworkRequest) -> URLRequest {
-        var urlRequest = URLRequest(url: request.url)
-        urlRequest.httpMethod = request.method.rawValue
-        urlRequest.allHTTPHeaderFields = request.headers
-        urlRequest.httpBody = request.body
-        
-        return urlRequest
     }
 }

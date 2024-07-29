@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>AsyncNetworker Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/AsyncNetworker" class="dashAnchor"></a>
+    <a title="AsyncNetworker Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SwiftNetworker Docs</a> (76% documented)</p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SwiftNetworker</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        <a href="../Classes.html">Classes</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        AsyncNetworker Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AsyncNetworker.html">AsyncNetworker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ErrorHandler.html">ErrorHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Logger.html">Logger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Logger/LogLevel.html">– LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Networker.html">Networker</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/HTTPMethod.html">HTTPMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/HTTPStatusCode.html">HTTPStatusCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/NetworkErrorCases.html">NetworkErrorCases</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AsyncNetworkerProtocol.html">AsyncNetworkerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NetworkerProtocol.html">NetworkerProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkRequest.html">NetworkRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkResponse.html">NetworkResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Response.html">Response</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>AsyncNetworker</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AsyncNetworker</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/AsyncNetworkerProtocol.html">AsyncNetworkerProtocol</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>A class responsible for making network requests and handling responses.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>AsyncNetworker</code> class provides a standardized implementation for performing asynchronous network requests using Swift&rsquo;s <code>async/await</code> syntax.
+This class conforms to the <code><a href="../Protocols/AsyncNetworkerProtocol.html">AsyncNetworkerProtocol</a></code> and includes methods for performing basic network requests, requests with decodable responses,
+upload requests, and download requests.</p>
+
+<p>The class is designed to simplify the process of making network requests by handling common tasks such as logging, error handling, and response decoding.
+It uses <code>URLSession</code> for network communication and leverages the <code><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> and <code><a href="../Classes/Logger.html">Logger</a></code> for error handling and logging, respectively.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>AsyncNetworker</code>, create an instance of the class and call the appropriate method for the network operation you want to perform. You can
+optionally provide your own implementations of <code><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> and <code><a href="../Classes/Logger.html">Logger</a></code> for custom error handling and logging behavior.</p>
+<pre class="highlight swift"><code><span class="kd">@available(iOS 15.0, macOS 12.0, *)</span>
+<span class="k">let</span> <span class="nv">networker</span> <span class="o">=</span> <span class="kt">AsyncNetworker</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">NetworkRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://example.com"</span><span class="p">)</span><span class="o">!</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">performAsync</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</code></pre>
+
+<p>A class responsible for making network requests and handling responses.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker05AsyncB0C12errorHandler6loggerAcA05ErrorE8Protocol_p_AA6LoggerCtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(errorHandler:logger:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB0C12errorHandler6loggerAcA05ErrorE8Protocol_p_AA6LoggerCtcfc">init(errorHandler:<wbr>logger:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes the Networker with optional error handler and logger.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOS 15.0, macOS 12.0, *)</span>
+<span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">errorHandler</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/ErrorHandler.html">ErrorHandler</a></span><span class="p">(),</span> <span class="nv">logger</span><span class="p">:</span> <span class="kt"><a href="../Classes/Logger.html">Logger</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/Logger.html">Logger</a></span><span class="p">())</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>errorHandler</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An instance of ErrorHandler for handling errors.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>logger</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An instance of Logger for logging requests and responses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Simple%20Requests"></a>
+                <a name="//apple_ref/swift/Section/Simple Requests" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Simple%20Requests"></a>
+                  <h3 class="section-name"><span>Simple Requests</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker05AsyncB0C07performC0ys6ResultOyAA15NetworkResponseVAA0F5ErrorVGAA0F7RequestVYaF"></a>
+                    <a name="//apple_ref/swift/Method/performAsync(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB0C07performC0ys6ResultOyAA15NetworkResponseVAA0F5ErrorVGAA0F7RequestVYaF">performAsync(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Performs a simple network request asynchronously.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOS 15.0, macOS 12.0, *)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">performAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>request</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The network request to be made.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A result containing either the network response or a network error.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Decodable%20Responses"></a>
+                <a name="//apple_ref/swift/Section/Decodable Responses" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Decodable%20Responses"></a>
+                  <h3 class="section-name"><span>Decodable Responses</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker05AsyncB0C07performC0_13responseModels6ResultOyAA8ResponseVyxGAA12NetworkErrorVGAA0I7RequestV_xmtYaSeRzlF"></a>
+                    <a name="//apple_ref/swift/Method/performAsync(_:responseModel:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB0C07performC0_13responseModels6ResultOyAA8ResponseVyxGAA12NetworkErrorVGAA0I7RequestV_xmtYaSeRzlF">performAsync(_:<wbr>responseModel:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Performs a network request and decodes the response into a specified model type asynchronously.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOS 15.0, macOS 12.0, *)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="n">performAsync</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">responseModel</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/Response.html">Response</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Decodable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>request</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The network request to be made.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>responseModel</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The type to decode the response into.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A result containing either the decoded response or a network error.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Upload%20Requests"></a>
+                <a name="//apple_ref/swift/Section/Upload Requests" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Upload%20Requests"></a>
+                  <h3 class="section-name"><span>Upload Requests</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker05AsyncB0C013performUploadC0_4datas6ResultOyAA15NetworkResponseVAA0H5ErrorVGAA0H7RequestV_10Foundation4DataVtYaF"></a>
+                    <a name="//apple_ref/swift/Method/performUploadAsync(_:data:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB0C013performUploadC0_4datas6ResultOyAA15NetworkResponseVAA0H5ErrorVGAA0H7RequestV_10Foundation4DataVtYaF">performUploadAsync(_:<wbr>data:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Performs an upload request asynchronously.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOS 15.0, macOS 12.0, *)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">performUploadAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>request</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The upload request to be made.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The data to be uploaded.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A result containing either the network response or a network error.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Download%20Requests"></a>
+                <a name="//apple_ref/swift/Section/Download Requests" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Download%20Requests"></a>
+                  <h3 class="section-name"><span>Download Requests</span>
+</h3>
+                </div>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker05AsyncB0C015performDownloadC0ys6ResultOy10Foundation3URLVAA12NetworkErrorVGAA0I7RequestVYaF"></a>
+                    <a name="//apple_ref/swift/Method/performDownloadAsync(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB0C015performDownloadC0ys6ResultOy10Foundation3URLVAA12NetworkErrorVGAA0I7RequestVYaF">performDownloadAsync(_:<wbr>)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Asynchronous
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Performs a download request asynchronously.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOS 15.0, macOS 12.0, *)</span>
+<span class="kd">public</span> <span class="kd">func</span> <span class="nf">performDownloadAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URL</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>request</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The download request to be made.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A result containing either the file URL or a network error.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-29)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

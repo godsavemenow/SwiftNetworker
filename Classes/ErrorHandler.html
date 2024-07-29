@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ErrorHandler Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/ErrorHandler" class="dashAnchor"></a>
+    <a title="ErrorHandler Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SwiftNetworker Docs</a> (76% documented)</p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SwiftNetworker</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        <a href="../Classes.html">Classes</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        ErrorHandler Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AsyncNetworker.html">AsyncNetworker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ErrorHandler.html">ErrorHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Logger.html">Logger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Logger/LogLevel.html">– LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Networker.html">Networker</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/HTTPMethod.html">HTTPMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/HTTPStatusCode.html">HTTPStatusCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/NetworkErrorCases.html">NetworkErrorCases</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AsyncNetworkerProtocol.html">AsyncNetworkerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NetworkerProtocol.html">NetworkerProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkRequest.html">NetworkRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NetworkResponse.html">NetworkResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Response.html">Response</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>ErrorHandler</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ErrorHandler</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>A class responsible for handling various types of errors and converting them into <code><a href="../Structs/NetworkError.html">NetworkError</a></code> instances.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>ErrorHandler</code> class provides a centralized mechanism for handling errors that occur during network operations.
+It conforms to the <code><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> and includes methods for converting different types of errors, such as HTTP
+status code errors, decoding errors, and URL errors, into standardized <code><a href="../Structs/NetworkError.html">NetworkError</a></code> instances.</p>
+
+<p>This class is designed to ensure consistent error handling across network operations, making it easier to manage and
+debug errors. By encapsulating error handling logic within this class, developers can maintain cleaner and more maintainable
+network-related code.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>ErrorHandler</code>, create an instance of the class and call the <code>handle</code> method with the error, optional data, and response
+received from a network request. The method will return a <code><a href="../Structs/NetworkError.html">NetworkError</a></code> instance that represents the handled error.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">errorHandler</span> <span class="o">=</span> <span class="kt">ErrorHandler</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">networkError</span> <span class="o">=</span> <span class="n">errorHandler</span><span class="o">.</span><span class="nf">handle</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="n">responseData</span><span class="p">,</span> <span class="nv">response</span><span class="p">:</span> <span class="n">urlResponse</span><span class="p">)</span>
+</code></pre>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker12ErrorHandlerCACycfc"></a>
+                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker12ErrorHandlerCACycfc">init()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes a new instance of <code>ErrorHandler</code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker12ErrorHandlerC6handle_4data8responseAA07NetworkC0Vs0C0_pSg_10Foundation4DataVSgSo13NSURLResponseCSgtF"></a>
+                    <a name="//apple_ref/swift/Method/handle(_:data:response:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker12ErrorHandlerC6handle_4data8responseAA07NetworkC0Vs0C0_pSg_10Foundation4DataVSgSo13NSURLResponseCSgtF">handle(_:<wbr>data:<wbr>response:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Handles an error and its associated URL response, returning a <code><a href="../Structs/NetworkError.html">NetworkError</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">handle</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?,</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">URLResponse</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>error</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The error to handle.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>response</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL response associated with the error.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A <code><a href="../Structs/NetworkError.html">NetworkError</a></code> representing the handled error.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-29)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

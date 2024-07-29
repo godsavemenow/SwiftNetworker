@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Enumerations  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/Enumerations" class="dashAnchor"></a>
+    <a title="Enumerations  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">SwiftNetworker Docs</a> (76% documented)</p>
+        <div class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">SwiftNetworker</a>
+        <img id="carat" src="img/carat.png" alt=""/>
+        Enumerations  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/AsyncNetworker.html">AsyncNetworker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ErrorHandler.html">ErrorHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Logger.html">Logger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Logger/LogLevel.html">– LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Networker.html">Networker</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/HTTPMethod.html">HTTPMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/HTTPStatusCode.html">HTTPStatusCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/NetworkErrorCases.html">NetworkErrorCases</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/AsyncNetworkerProtocol.html">AsyncNetworkerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/NetworkerProtocol.html">NetworkerProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/NetworkRequest.html">NetworkRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/NetworkResponse.html">NetworkResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Response.html">Response</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Enumerations</h1>
+            <p>The following enumerations are available globally.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker10HTTPMethodO"></a>
+                    <a name="//apple_ref/swift/Enum/HTTPMethod" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker10HTTPMethodO">HTTPMethod</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An enumeration representing HTTP methods.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>HTTPMethod</code> enumeration defines the most commonly used HTTP methods for performing network requests. Each case in this enumeration
+represents a specific type of HTTP request method, such as GET, POST, PUT, PATCH, and DELETE. These methods are used to interact with web
+servers and perform various operations on resources.</p>
+
+<p>This enumeration provides a convenient way to specify the HTTP method for a network request. By using the raw values associated with each
+case, developers can easily set the HTTP method of a <code>URLRequest</code> object.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>HTTPMethod</code> enumeration, simply assign one of its cases to the <code>httpMethod</code> property of a <code>URLRequest</code> object. For example:</p>
+<pre class="highlight swift"><code><span class="k">var</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">URLRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://example.com"</span><span class="p">)</span><span class="o">!</span><span class="p">)</span>
+<span class="n">request</span><span class="o">.</span><span class="n">httpMethod</span> <span class="o">=</span> <span class="kt">HTTPMethod</span><span class="o">.</span><span class="k">get</span><span class="o">.</span><span class="n">rawValue</span>
+</code></pre>
+<h2 id='cases' class='heading'>Cases</h2>
+
+                        <a href="Enums/HTTPMethod.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">HTTPMethod</span> <span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker14HTTPStatusCodeO"></a>
+                    <a name="//apple_ref/swift/Enum/HTTPStatusCode" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker14HTTPStatusCodeO">HTTPStatusCode</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An enumeration representing HTTP status codes.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>HTTPStatusCode</code> enumeration defines a comprehensive list of HTTP status codes categorized into success, redirection,
+client error, and server error responses. Each case in this enumeration represents a specific HTTP status code and its associated
+integer value. The enumeration also provides utility methods to check the category of a given status code and to create an instance
+from an integer value.</p>
+
+<p>This enumeration is useful for handling and interpreting HTTP responses in network operations, allowing developers to easily
+identify the type of response and take appropriate action based on the status code.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>HTTPStatusCode</code> enumeration, either match against specific cases or use the utility methods to check the category of
+a status code. For example:</p>
+<pre class="highlight swift"><code><span class="k">if</span> <span class="kt">HTTPStatusCode</span><span class="o">.</span><span class="nf">isSuccessful</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">statusCode</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle successful response</span>
+<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="kt">HTTPStatusCode</span><span class="o">.</span><span class="nf">isClientError</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">statusCode</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Handle client error response</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='cases' class='heading'>Cases</h2>
+
+                        <a href="Enums/HTTPStatusCode.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">HTTPStatusCode</span> <span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker17NetworkErrorCasesO"></a>
+                    <a name="//apple_ref/swift/Enum/NetworkErrorCases" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker17NetworkErrorCasesO">NetworkErrorCases</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An enumeration representing various types of network-related errors, each with a custom description.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>NetworkErrorCases</code> enumeration defines a wide range of network-related errors, each with a specific description.
+These error cases cover common network issues such as invalid URLs, no data responses, timeouts, client and server errors,
+parsing and decoding errors, and more. Each case can provide a detailed description that can include additional context
+or messages to aid in understanding the nature of the error.</p>
+
+<p>This enumeration is designed to be used with the <code><a href="Structs/NetworkError.html">NetworkError</a></code> struct to provide a standardized way to handle network
+errors across different parts of an application.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>NetworkErrorCases</code> enumeration, create an instance of the <code><a href="Structs/NetworkError.html">NetworkError</a></code> struct with a specific case and
+optional message. Use the <code>description</code> property to get a textual representation of the error case.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">errorCase</span> <span class="o">=</span> <span class="kt">NetworkErrorCases</span><span class="o">.</span><span class="nf">badRequest</span><span class="p">(</span><span class="s">"Invalid parameters"</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="kt">NetworkError</span><span class="p">(</span><span class="nv">errorCase</span><span class="p">:</span> <span class="n">errorCase</span><span class="p">,</span> <span class="nv">apiErrorMessage</span><span class="p">:</span> <span class="s">"Parameter 'id' is missing"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">detailedDescription</span><span class="p">)</span>  <span class="c1">// Output: "Bad Request: Invalid parameters - Parameter 'id' is missing"</span>
+</code></pre>
+<h2 id='cases' class='heading'>Cases</h2>
+
+                        <a href="Enums/NetworkErrorCases.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">NetworkErrorCases</span> <span class="p">:</span> <span class="kt">CustomStringConvertible</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-29)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

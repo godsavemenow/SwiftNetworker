@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Classes  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/Classes" class="dashAnchor"></a>
+    <a title="Classes  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">SwiftNetworker Docs</a> (76% documented)</p>
+        <div class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">SwiftNetworker</a>
+        <img id="carat" src="img/carat.png" alt=""/>
+        Classes  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/AsyncNetworker.html">AsyncNetworker</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ErrorHandler.html">ErrorHandler</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Logger.html">Logger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Logger/LogLevel.html">– LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Networker.html">Networker</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/HTTPMethod.html">HTTPMethod</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/HTTPStatusCode.html">HTTPStatusCode</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/NetworkErrorCases.html">NetworkErrorCases</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/AsyncNetworkerProtocol.html">AsyncNetworkerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/NetworkerProtocol.html">NetworkerProtocol</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/NetworkRequest.html">NetworkRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/NetworkResponse.html">NetworkResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/Response.html">Response</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Classes</h1>
+            <p>The following classes are available globally.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker05AsyncB0C"></a>
+                    <a name="//apple_ref/swift/Class/AsyncNetworker" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB0C">AsyncNetworker</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A class responsible for making network requests and handling responses.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>AsyncNetworker</code> class provides a standardized implementation for performing asynchronous network requests using Swift&rsquo;s <code>async/await</code> syntax.
+This class conforms to the <code><a href="Protocols/AsyncNetworkerProtocol.html">AsyncNetworkerProtocol</a></code> and includes methods for performing basic network requests, requests with decodable responses,
+upload requests, and download requests.</p>
+
+<p>The class is designed to simplify the process of making network requests by handling common tasks such as logging, error handling, and response decoding.
+It uses <code>URLSession</code> for network communication and leverages the <code><a href="Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> and <code><a href="Classes/Logger.html">Logger</a></code> for error handling and logging, respectively.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>AsyncNetworker</code>, create an instance of the class and call the appropriate method for the network operation you want to perform. You can
+optionally provide your own implementations of <code><a href="Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> and <code><a href="Classes/Logger.html">Logger</a></code> for custom error handling and logging behavior.</p>
+<pre class="highlight swift"><code><span class="kd">@available(iOS 15.0, macOS 12.0, *)</span>
+<span class="k">let</span> <span class="nv">networker</span> <span class="o">=</span> <span class="kt">AsyncNetworker</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">NetworkRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://example.com"</span><span class="p">)</span><span class="o">!</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">performAsync</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</code></pre>
+
+<p>A class responsible for making network requests and handling responses.</p>
+
+                        <a href="Classes/AsyncNetworker.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">AsyncNetworker</span> <span class="p">:</span> <span class="kt"><a href="Protocols/AsyncNetworkerProtocol.html">AsyncNetworkerProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker12ErrorHandlerC"></a>
+                    <a name="//apple_ref/swift/Class/ErrorHandler" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker12ErrorHandlerC">ErrorHandler</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A class responsible for handling various types of errors and converting them into <code><a href="Structs/NetworkError.html">NetworkError</a></code> instances.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>ErrorHandler</code> class provides a centralized mechanism for handling errors that occur during network operations.
+It conforms to the <code><a href="Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> and includes methods for converting different types of errors, such as HTTP
+status code errors, decoding errors, and URL errors, into standardized <code><a href="Structs/NetworkError.html">NetworkError</a></code> instances.</p>
+
+<p>This class is designed to ensure consistent error handling across network operations, making it easier to manage and
+debug errors. By encapsulating error handling logic within this class, developers can maintain cleaner and more maintainable
+network-related code.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>ErrorHandler</code>, create an instance of the class and call the <code>handle</code> method with the error, optional data, and response
+received from a network request. The method will return a <code><a href="Structs/NetworkError.html">NetworkError</a></code> instance that represents the handled error.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">errorHandler</span> <span class="o">=</span> <span class="kt">ErrorHandler</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">networkError</span> <span class="o">=</span> <span class="n">errorHandler</span><span class="o">.</span><span class="nf">handle</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="n">responseData</span><span class="p">,</span> <span class="nv">response</span><span class="p">:</span> <span class="n">urlResponse</span><span class="p">)</span>
+</code></pre>
+
+                        <a href="Classes/ErrorHandler.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ErrorHandler</span> <span class="p">:</span> <span class="kt"><a href="Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker6LoggerC"></a>
+                    <a name="//apple_ref/swift/Class/Logger" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker6LoggerC">Logger</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A logger class to log network requests, responses, and errors.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>Logger</code> class provides a flexible and configurable mechanism for logging various aspects of network operations, including requests,
+responses, and errors. It conforms to the <code>LoggerProtocol</code> and includes methods for logging network-related activities with different
+log levels such as info, debug, and error. The logging behavior can be customized using the log level, silent mode, and a custom log output
+closure.</p>
+
+<p>This class is designed to help developers monitor and debug network interactions by providing detailed logs of HTTP requests and responses.
+It can be easily integrated into network-related code and provides a simple API for logging.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>Logger</code>, create an instance of the class and configure it with the desired log level, silent mode, and log output. Then,
+call the appropriate logging methods to log requests, responses, and errors.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">logger</span> <span class="o">=</span> <span class="kt">Logger</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="o">.</span><span class="n">debug</span><span class="p">,</span> <span class="nv">isSilent</span><span class="p">:</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span> <span class="n">logMessage</span> <span class="k">in</span>
+    <span class="c1">// Custom log output, e.g., write to a file</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">logMessage</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="n">logger</span><span class="o">.</span><span class="nf">logRequest</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="nf">logResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="nf">logError</span><span class="p">(</span><span class="n">networkError</span><span class="p">)</span>
+</code></pre>
+
+                        <a href="Classes/Logger.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Logger</span> <span class="p">:</span> <span class="kt">LoggerProtocol</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker0B0C"></a>
+                    <a name="//apple_ref/swift/Class/Networker" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker0B0C">Networker</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A class responsible for making network requests and handling responses.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>Networker</code> class provides a comprehensive solution for performing network operations such as simple requests, requests with decodable responses,
+uploads, and downloads. It conforms to the <code><a href="Protocols/NetworkerProtocol.html">NetworkerProtocol</a></code> and includes methods for managing network tasks, handling responses, and logging activities.
+The class ensures that new requests can be locked and unlocked, providing a mechanism to control network traffic.</p>
+
+<p>The <code>Networker</code> uses <code>URLSession</code> to manage network requests and relies on the <code><a href="Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> for error handling and <code><a href="Classes/Logger.html">Logger</a></code> for logging requests
+and responses. This design allows for consistent and reusable network operations across different parts of an application.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To use the <code>Networker</code>, either utilize the shared singleton instance or create a new instance. Configure it with custom error handler and logger if needed.
+Call the appropriate methods to perform network requests, upload data, or download files.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">networker</span> <span class="o">=</span> <span class="kt">Networker</span><span class="o">.</span><span class="n">shared</span>
+<span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">NetworkRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://example.com"</span><span class="p">)</span><span class="o">!</span><span class="p">)</span>
+<span class="n">networker</span><span class="o">.</span><span class="nf">perform</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
+    <span class="c1">// Handle result</span>
+<span class="p">}</span>
+</code></pre>
+
+                        <a href="Classes/Networker.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Networker</span> <span class="p">:</span> <span class="kt"><a href="Protocols/NetworkerProtocol.html">NetworkerProtocol</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-29)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

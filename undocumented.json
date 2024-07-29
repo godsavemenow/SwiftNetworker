@@ -1,0 +1,180 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Logger.swift",
+      "line": 32,
+      "symbol": "Logger.LogLevel.debug",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Logger.swift",
+      "line": 32,
+      "symbol": "Logger.LogLevel.error",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Logger.swift",
+      "line": 32,
+      "symbol": "Logger.LogLevel.info",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 24,
+      "symbol": "NetworkErrorCases.invalidURL",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 25,
+      "symbol": "NetworkErrorCases.noData",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 26,
+      "symbol": "NetworkErrorCases.timeOut",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 27,
+      "symbol": "NetworkErrorCases.locked",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 28,
+      "symbol": "NetworkErrorCases.badRequest(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 29,
+      "symbol": "NetworkErrorCases.unauthorized(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 30,
+      "symbol": "NetworkErrorCases.forbidden(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 31,
+      "symbol": "NetworkErrorCases.notFound(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 32,
+      "symbol": "NetworkErrorCases.serverError(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 33,
+      "symbol": "NetworkErrorCases.parsingError(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 34,
+      "symbol": "NetworkErrorCases.requestCanceled(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 35,
+      "symbol": "NetworkErrorCases.decodingError(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 36,
+      "symbol": "NetworkErrorCases.networkError(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 37,
+      "symbol": "NetworkErrorCases.unknown(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 38,
+      "symbol": "NetworkErrorCases.multipleChoices(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 39,
+      "symbol": "NetworkErrorCases.movedPermanently(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 40,
+      "symbol": "NetworkErrorCases.found(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 41,
+      "symbol": "NetworkErrorCases.seeOther(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 42,
+      "symbol": "NetworkErrorCases.notModified(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 43,
+      "symbol": "NetworkErrorCases.useProxy(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 44,
+      "symbol": "NetworkErrorCases.temporaryRedirect(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkErrorCases.swift",
+      "line": 45,
+      "symbol": "NetworkErrorCases.permanentRedirect(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/runner/work/SwiftNetworker/SwiftNetworker"
+}

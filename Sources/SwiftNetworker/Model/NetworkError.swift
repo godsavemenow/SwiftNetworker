@@ -1,9 +1,13 @@
 import Foundation
 
+/// A custom error type representing various network-related errors.
 public struct NetworkError: Error {
+    /// The specific case of the network error.
     let errorCase: NetworkErrorCases
+    /// An optional message provided by the API.
     let apiErrorMessage: String?
     
+    /// A detailed description of the network error, combining the error case description and the API message if available.
     public var detailedDescription: String {
         if let apiErrorMessage = apiErrorMessage {
             return "\(errorCase.description) - \(apiErrorMessage)"
@@ -13,11 +17,12 @@ public struct NetworkError: Error {
     }
 }
 
-/// An enumeration representing various types of network-related errors.
+/// An enumeration representing various types of network-related errors, each with a custom description.
 public enum NetworkErrorCases: CustomStringConvertible {
     case invalidURL
     case noData
     case timeOut
+    case locked
     case badRequest(String)
     case unauthorized(String)
     case forbidden(String)
@@ -82,6 +87,8 @@ public enum NetworkErrorCases: CustomStringConvertible {
             return "Temporary Redirect: \(message)"
         case .permanentRedirect(let message):
             return "Permanent Redirect: \(message)"
+        case .locked:
+            return "The networker is locked"
         }
     }
 }

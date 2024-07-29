@@ -1,7 +1,28 @@
 import Foundation
 
 /// A class responsible for making network requests and handling responses.
-public class AsyncNetworker {
+///
+/// ## Overview
+/// The `AsyncNetworker` class provides a standardized implementation for performing asynchronous network requests using Swift's `async/await` syntax.
+/// This class conforms to the `AsyncNetworkerProtocol` and includes methods for performing basic network requests, requests with decodable responses,
+/// upload requests, and download requests.
+///
+/// The class is designed to simplify the process of making network requests by handling common tasks such as logging, error handling, and response decoding.
+/// It uses `URLSession` for network communication and leverages the `ErrorHandlerProtocol` and `Logger` for error handling and logging, respectively.
+///
+/// ## Usage
+/// To use the `AsyncNetworker`, create an instance of the class and call the appropriate method for the network operation you want to perform. You can
+/// optionally provide your own implementations of `ErrorHandlerProtocol` and `Logger` for custom error handling and logging behavior.
+///
+/// ```swift
+/// @available(iOS 15.0, macOS 12.0, *)
+/// let networker = AsyncNetworker()
+/// let request = NetworkRequest(url: URL(string: "https://example.com")!)
+/// let result = await networker.performAsync(request)
+/// ```
+///
+/// A class responsible for making network requests and handling responses.
+public class AsyncNetworker: AsyncNetworkerProtocol {
     
     private let errorHandler: ErrorHandlerProtocol
     private let logger: Logger
@@ -10,6 +31,8 @@ public class AsyncNetworker {
     /// - Parameters:
     ///   - errorHandler: An instance of ErrorHandler for handling errors.
     ///   - logger: An instance of Logger for logging requests and responses.
+    
+    @available(iOS 15.0, macOS 12.0, *)
     public init(errorHandler: ErrorHandlerProtocol = ErrorHandler(), logger: Logger = Logger()) {
         self.errorHandler = errorHandler
         self.logger = logger

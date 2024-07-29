@@ -2,6 +2,29 @@ import Foundation
 
 /// A logger class to log network requests, responses, and errors.
 ///
+/// ## Overview
+/// The `Logger` class provides a flexible and configurable mechanism for logging various aspects of network operations, including requests,
+/// responses, and errors. It conforms to the `LoggerProtocol` and includes methods for logging network-related activities with different
+/// log levels such as info, debug, and error. The logging behavior can be customized using the log level, silent mode, and a custom log output
+/// closure.
+///
+/// This class is designed to help developers monitor and debug network interactions by providing detailed logs of HTTP requests and responses.
+/// It can be easily integrated into network-related code and provides a simple API for logging.
+///
+/// ## Usage
+/// To use the `Logger`, create an instance of the class and configure it with the desired log level, silent mode, and log output. Then,
+/// call the appropriate logging methods to log requests, responses, and errors.
+///
+/// ```swift
+/// let logger = Logger(logLevel: .debug, isSilent: false) { logMessage in
+///     // Custom log output, e.g., write to a file
+///     print(logMessage)
+/// }
+/// logger.logRequest(request)
+/// logger.logResponse(response)
+/// logger.logError(networkError)
+/// ```
+///
 public class Logger: LoggerProtocol {
     
     /// Enum representing the log level.

@@ -1,6 +1,3 @@
-# This workflow will build a Swift project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-swift
-
 name: Swift
 
 on:
@@ -9,7 +6,6 @@ on:
   pull_request:
     branches: [ "dev", "main" ]
 
-
 jobs:
   build:
 
@@ -17,7 +13,33 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Build
       run: swift build -v
+
     - name: Run tests
-      run: swift test -v
+      run: swift test --enable-code-coverage -v
+
+    - name: Generate code coverage report
+      run: |
+        xcrun xccov view --report --json $(find . -name "*.xcresult") > coverage.json
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.json
+        flags: unittests
+        name: codecov-report
+        fail_ci_if_error: true
+
+    - name: Install SwiftDoc
+      run: brew install swiftdocorg/swift-doc/swift-doc
+
+    - name: Generate Documentation
+      run: swift doc generate Sources --module-name SwiftNetworker --output docs --format html
+
+    - name: Deploy Documentation to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs

@@ -1,5 +1,25 @@
 import Foundation
 
+/// A utility class providing common functionality for handling network responses, errors, and creating URL requests.
+///
+/// ## Overview
+/// The `Commons` class provides a collection of static methods to assist with common tasks related to network operations.
+/// This includes handling responses from network requests, managing errors, decoding responses into model types, and creating
+/// URL requests from custom network request objects. By centralizing these functionalities, `Commons` ensures consistency and
+/// reusability across different network operations.
+///
+/// The class works closely with the `LoggerProtocol` and `ErrorHandlerProtocol` to log network activities and handle errors
+/// in a standardized way. It also simplifies the process of decoding JSON responses and handling various network-related tasks.
+///
+/// ## Usage
+/// The methods in `Commons` are static, meaning they can be called without creating an instance of the class. These methods are
+/// typically used within other classes that manage network requests and responses.
+///
+/// ```swift
+/// let urlRequest = Commons.makeURLRequest(from: networkRequest)
+/// let result = Commons.handleResponse(data: responseData, response: urlResponse, logger: logger, errorHandler: errorHandler)
+/// ```
+///
 class Commons {
     /// Handles the response for a network request asynchronously.
     /// - Parameters:

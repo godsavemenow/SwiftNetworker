@@ -1,6 +1,25 @@
 import Foundation
 
 /// A class responsible for handling various types of errors and converting them into `NetworkError` instances.
+///
+/// ## Overview
+/// The `ErrorHandler` class provides a centralized mechanism for handling errors that occur during network operations.
+/// It conforms to the `ErrorHandlerProtocol` and includes methods for converting different types of errors, such as HTTP
+/// status code errors, decoding errors, and URL errors, into standardized `NetworkError` instances.
+///
+/// This class is designed to ensure consistent error handling across network operations, making it easier to manage and
+/// debug errors. By encapsulating error handling logic within this class, developers can maintain cleaner and more maintainable
+/// network-related code.
+///
+/// ## Usage
+/// To use the `ErrorHandler`, create an instance of the class and call the `handle` method with the error, optional data, and response
+/// received from a network request. The method will return a `NetworkError` instance that represents the handled error.
+///
+/// ```swift
+/// let errorHandler = ErrorHandler()
+/// let networkError = errorHandler.handle(error, data: responseData, response: urlResponse)
+/// ```
+///
 public class ErrorHandler: ErrorHandlerProtocol {
     
     /// Initializes a new instance of `ErrorHandler`.

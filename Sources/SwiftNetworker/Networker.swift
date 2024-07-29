@@ -1,6 +1,27 @@
 import Foundation
 
 /// A class responsible for making network requests and handling responses.
+///
+/// ## Overview
+/// The `Networker` class provides a comprehensive solution for performing network operations such as simple requests, requests with decodable responses,
+/// uploads, and downloads. It conforms to the `NetworkerProtocol` and includes methods for managing network tasks, handling responses, and logging activities.
+/// The class ensures that new requests can be locked and unlocked, providing a mechanism to control network traffic.
+///
+/// The `Networker` uses `URLSession` to manage network requests and relies on the `ErrorHandlerProtocol` for error handling and `Logger` for logging requests
+/// and responses. This design allows for consistent and reusable network operations across different parts of an application.
+///
+/// ## Usage
+/// To use the `Networker`, either utilize the shared singleton instance or create a new instance. Configure it with custom error handler and logger if needed.
+/// Call the appropriate methods to perform network requests, upload data, or download files.
+///
+/// ```swift
+/// let networker = Networker.shared
+/// let request = NetworkRequest(url: URL(string: "https://example.com")!)
+/// networker.perform(request) { result in
+///     // Handle result
+/// }
+/// ```
+///
 public class Networker: NetworkerProtocol {
     
     private let errorHandler: ErrorHandlerProtocol

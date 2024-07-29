@@ -103,26 +103,169 @@
         <section>
           <section class="section">
             
-            <h1 id='swift-networker' class='heading'>Swift-Networker</h1>
+            <h1 id='swiftnetworker' class='heading'>SwiftNetworker</h1>
 
-<p>Swift-Networker is a powerful and easy-to-use networking library designed for iOS and macOS applications, aimed at simplifying network communication in your Swift projects. With an intuitive and efficient API, Swift-Networker makes it easy to perform HTTP requests, manage responses, and handle errors quickly and securely.</p>
+<p>SwiftNetworker is a lightweight and powerful networking library written in Swift. It provides a simple interface for making network requests and handling responses, making it easy to integrate into your Swift projects.</p>
 <h2 id='features' class='heading'>Features</h2>
 
 <ul>
-<li><strong>Simplified HTTP Requests</strong>: Execute GET, POST, PUT, DELETE requests, and more with just a few lines of code.</li>
-<li><strong>Response Management</strong>: Efficiently handle responses with automatic JSON parsing.</li>
-<li><strong>Error Handling</strong>: Robustly manage network errors and HTTP responses.</li>
-<li><strong>Secure Connections</strong>: Built-in HTTPS and SSL/TLS support to ensure data security.</li>
-<li><strong>Configurable and Extensible</strong>: Customize headers, request parameters, and caching policies as needed.</li>
-<li><strong>Comprehensive Documentation</strong>: Examples and guides to facilitate integration and usage of the library.</li>
+<li>Simple and intuitive API</li>
+<li>Supports GET, POST, PUT, DELETE, and custom HTTP methods</li>
+<li>Handles JSON encoding and decoding</li>
+<li>Supports URL parameters and request bodies</li>
+<li>Customizable request headers</li>
+<li>Automatic error handling</li>
+<li>Supports Swift Concurrency (async/await)</li>
 </ul>
 <h2 id='installation' class='heading'>Installation</h2>
+<h3 id='swift-package-manager' class='heading'>Swift Package Manager</h3>
 
-<p>Swift-Networker is available through the Swift Package Manager (SPM). To add it to your project, include the following dependency in your <code>Package.swift</code>:</p>
+<p>To add SwiftNetworker to your project, use Swift Package Manager. Add the following dependency to your <code>Package.swift</code> file:</p>
 <pre class="highlight swift"><code><span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span>
-    <span class="o">.</span><span class="nf">package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/godsavemenow/swift-networker.git"</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="s">"1.0.0"</span><span class="p">)</span>
+    <span class="o">.</span><span class="nf">package</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"https://github.com/godsavemenow/SwiftNetworker.git"</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="s">"1.0.0"</span><span class="p">)</span>
 <span class="p">]</span>
 </code></pre>
+
+<p>Then, include <code>&quot;SwiftNetworker&quot;</code> as a dependency in your target:</p>
+<pre class="highlight swift"><code><span class="o">.</span><span class="nf">target</span><span class="p">(</span>
+    <span class="nv">name</span><span class="p">:</span> <span class="s">"YourTargetName"</span><span class="p">,</span>
+    <span class="nv">dependencies</span><span class="p">:</span> <span class="p">[</span><span class="s">"SwiftNetworker"</span><span class="p">]</span>
+<span class="p">)</span>
+</code></pre>
+<h2 id='usage' class='heading'>Usage</h2>
+<h3 id='importing-the-library' class='heading'>Importing the Library</h3>
+
+<p>First, import SwiftNetworker into your Swift file:</p>
+<pre class="highlight swift"><code><span class="kd">import</span> <span class="kt">SwiftNetworker</span>
+</code></pre>
+<h3 id='creating-a-networker-instance' class='heading'>Creating a Networker Instance</h3>
+
+<p>Create an instance of the <code><a href="Classes/Networker.html">Networker</a></code> class:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">networker</span> <span class="o">=</span> <span class="kt">Networker</span><span class="p">()</span>
+</code></pre>
+<h3 id='making-a-request' class='heading'>Making a Request</h3>
+
+<p>You can make network requests using the <code>request</code> method. Here’s an example of a GET request:</p>
+<pre class="highlight swift"><code><span class="k">do</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+        <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+        <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="k">get</span><span class="p">,</span>
+        <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+    <span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Request failed with error: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='http-methods' class='heading'>HTTP Methods</h3>
+
+<p>SwiftNetworker supports various HTTP methods. Here are examples of each:</p>
+<h4 id='get' class='heading'>GET</h4>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+    <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+    <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="k">get</span><span class="p">,</span>
+    <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+<span class="p">)</span>
+</code></pre>
+<h4 id='post' class='heading'>POST</h4>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+    <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+    <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">post</span><span class="p">,</span>
+    <span class="nv">body</span><span class="p">:</span> <span class="kt">YourRequestBodyType</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+    <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+<span class="p">)</span>
+</code></pre>
+<h4 id='put' class='heading'>PUT</h4>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+    <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+    <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">put</span><span class="p">,</span>
+    <span class="nv">body</span><span class="p">:</span> <span class="kt">YourRequestBodyType</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+    <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+<span class="p">)</span>
+</code></pre>
+<h4 id='delete' class='heading'>DELETE</h4>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+    <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+    <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">delete</span><span class="p">,</span>
+    <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+<span class="p">)</span>
+</code></pre>
+<h3 id='customizing-requests' class='heading'>Customizing Requests</h3>
+
+<p>You can customize your requests by adding headers and URL parameters:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+    <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+    <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="k">get</span><span class="p">,</span>
+    <span class="nv">headers</span><span class="p">:</span> <span class="p">[</span><span class="s">"Authorization"</span><span class="p">:</span> <span class="s">"Bearer token"</span><span class="p">],</span>
+    <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="s">"query"</span><span class="p">:</span> <span class="s">"value"</span><span class="p">],</span>
+    <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+<span class="p">)</span>
+</code></pre>
+<h3 id='handling-responses' class='heading'>Handling Responses</h3>
+
+<p>SwiftNetworker automatically decodes JSON responses into the specified response type:</p>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">YourResponseType</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+    <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+    <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="k">get</span><span class="p">,</span>
+    <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+<span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</code></pre>
+<h3 id='sending-parameters-and-receiving-response' class='heading'>Sending Parameters and Receiving Response</h3>
+
+<p>To send parameters and receive a response using <code>YourResponseType</code>, you can use the following example:</p>
+<pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">YourRequestBodyType</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">param1</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">param2</span><span class="p">:</span> <span class="kt">Int</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="kt">YourResponseType</span><span class="p">:</span> <span class="kt">Codable</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">result</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">status</span><span class="p">:</span> <span class="kt">Int</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">requestBody</span> <span class="o">=</span> <span class="kt">YourRequestBodyType</span><span class="p">(</span><span class="nv">param1</span><span class="p">:</span> <span class="s">"value1"</span><span class="p">,</span> <span class="nv">param2</span><span class="p">:</span> <span class="mi">123</span><span class="p">)</span>
+
+<span class="k">do</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+        <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+        <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">post</span><span class="p">,</span>
+        <span class="nv">body</span><span class="p">:</span> <span class="n">requestBody</span><span class="p">,</span>
+        <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+    <span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Request failed with error: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+<h3 id='error-handling' class='heading'>Error Handling</h3>
+
+<p>Errors are thrown for network or decoding failures. Handle them using Swift’s <code>do-catch</code> syntax:</p>
+<pre class="highlight swift"><code><span class="k">do</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">YourResponseType</span> <span class="o">=</span> <span class="k">try</span> <span class="n">await</span> <span class="n">networker</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+        <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://api.example.com/data"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
+        <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="k">get</span><span class="p">,</span>
+        <span class="nv">responseType</span><span class="p">:</span> <span class="kt">YourResponseType</span><span class="o">.</span><span class="k">self</span>
+    <span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Request failed with error: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='contributing' class='heading'>Contributing</h2>
+
+<p>Contributions are welcome! Please open an issue or submit a pull request.</p>
+<h2 id='license' class='heading'>License</h2>
+
+<p>SwiftNetworker is licensed under the MIT License. See the <a href="https://github.com/godsavemenow/SwiftNetworker/blob/main/LICENSE">LICENSE</a> file for more information.</p>
+<h2 id='acknowledgments' class='heading'>Acknowledgments</h2>
+
+<p>Thanks to the Swift community for their continuous support and contributions.</p>
 
           </section>
         </section>

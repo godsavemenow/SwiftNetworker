@@ -22,6 +22,7 @@ public enum NetworkErrorCases: CustomStringConvertible {
     case invalidURL
     case noData
     case timeOut
+    case locked
     case badRequest(String)
     case unauthorized(String)
     case forbidden(String)
@@ -86,6 +87,8 @@ public enum NetworkErrorCases: CustomStringConvertible {
             return "Temporary Redirect: \(message)"
         case .permanentRedirect(let message):
             return "Permanent Redirect: \(message)"
+        case .locked:
+            return "The networker is locked"
         }
     }
 }

@@ -2,7 +2,7 @@ import Foundation
 
 /// A logger class to log network requests, responses, and errors.
 ///
-public class Logger {
+public class Logger: LoggerProtocol {
     
     /// Enum representing the log level.
     public enum LogLevel {
@@ -60,6 +60,15 @@ public class Logger {
             logMessage += "Body: \(responseString)\n"
         }
         logMessage += "----------------\n"
+        logOutput(logMessage)
+    }
+    
+    func logResponse(_ title: String, message: String) {
+        guard !isSilent else { return }
+        guard logLevel == .error else { return }
+        var logMessage = "\n--- \(title) ---\n"
+        logMessage += "\(message)"
+        logMessage += "-------------\n"
         logOutput(logMessage)
     }
     

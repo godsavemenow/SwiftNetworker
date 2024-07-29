@@ -37,11 +37,15 @@ jobs:
         fail_ci_if_error: true
         token: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Install SwiftDoc
-      run: brew install swiftdocorg/swift-doc/swift-doc
+    - name: Install SwiftDoc dependencies
+      run: |
+        brew install sourcekitten
+        git clone https://github.com/SwiftDocOrg/swift-doc.git
+        cd swift-doc
+        make install
 
     - name: Generate Documentation
-      run: swift doc generate Sources --module-name SwiftNetworker --output docs --format html
+      run: swift-doc generate Sources --module-name SwiftNetworker --output docs --format html
 
     - name: Deploy Documentation to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3

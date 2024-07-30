@@ -33,7 +33,7 @@ import Foundation
 /// ```
 ///
 /// ## Methods
-protocol LoggerProtocol {
+public protocol LoggerProtocol {
     
     /// Logs an outgoing network request.
     ///

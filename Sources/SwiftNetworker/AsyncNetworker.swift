@@ -22,20 +22,26 @@ import Foundation
 /// ```
 ///
 /// A class responsible for making network requests and handling responses.
+@available(iOS 15.0, macOS 12.0, *)
 public class AsyncNetworker: AsyncNetworkerProtocol {
     
     private let errorHandler: ErrorHandlerProtocol
-    private let logger: Logger
-    
-    /// Initializes the Networker with optional error handler and logger.
+    private let logger: LoggerProtocol
+    private let requestInterceptors: [RequestInterceptorProtocol]
+
+    /// Initializes the AsyncNetworker with optional error handler, logger, and request interceptors.
     /// - Parameters:
-    ///   - errorHandler: An instance of ErrorHandler for handling errors.
-    ///   - logger: An instance of Logger for logging requests and responses.
-    
-    @available(iOS 15.0, macOS 12.0, *)
-    public init(errorHandler: ErrorHandlerProtocol = ErrorHandler(), logger: Logger = Logger()) {
+    ///   - errorHandler: An instance of `ErrorHandlerProtocol` for handling errors.
+    ///   - logger: An instance of `LoggerProtocol` for logging requests and responses.
+    ///   - requestInterceptors: An array of `RequestInterceptor` for modifying requests.
+    public init(
+        errorHandler: ErrorHandlerProtocol = ErrorHandler(),
+        logger: LoggerProtocol = Logger(),
+        requestInterceptors: [RequestInterceptorProtocol] = []
+    ) {
         self.errorHandler = errorHandler
         self.logger = logger
+        self.requestInterceptors = requestInterceptors
     }
     
     // MARK: - Simple Requests
@@ -43,9 +49,14 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// Performs a simple network request asynchronously.
     /// - Parameter request: The network request to be made.
     /// - Returns: A result containing either the network response or a network error.
-    @available(iOS 15.0, macOS 12.0, *)
     public func performAsync(_ request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
         await executeAsync(request: request)
+    }
+    
+    /// Applies all interceptors to the given URLRequest.
+    /// - Parameter request: The URLRequest to be modified.
+    private func intercept(_ request: inout URLRequest) {
+        requestInterceptors.forEach { $0.intercept(&request) }
     }
     
     // MARK: - Decodable Responses
@@ -55,7 +66,6 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     ///   - request: The network request to be made.
     ///   - responseModel: The type to decode the response into.
     /// - Returns: A result containing either the decoded response or a network error.
-    @available(iOS 15.0, macOS 12.0, *)
     public func performAsync<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type) async -> Result<Response<T>, NetworkError> {
         let result = await executeAsync(request: request)
         switch result {
@@ -73,7 +83,6 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     ///   - request: The upload request to be made.
     ///   - data: The data to be uploaded.
     /// - Returns: A result containing either the network response or a network error.
-    @available(iOS 15.0, macOS 12.0, *)
     public func performUploadAsync(_ request: NetworkRequest, data: Data) async -> Result<NetworkResponse, NetworkError> {
         await executeUploadAsync(request: request, data: data)
     }
@@ -84,7 +93,6 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Parameters:
     ///   - request: The download request to be made.
     /// - Returns: A result containing either the file URL or a network error.
-    @available(iOS 15.0, macOS 12.0, *)
     public func performDownloadAsync(_ request: NetworkRequest) async -> Result<URL, NetworkError> {
         await executeDownloadAsync(request: request)
     }
@@ -95,13 +103,15 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Parameters:
     ///   - request: The network request to be executed.
     /// - Returns: A result containing either the network response or a network error.
-    @available(iOS 15.0, macOS 12.0, *)
     private func executeAsync(request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
-        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+        guard var urlRequest = Commons.makeURLRequest(from: request) else {
             let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
             logger.logError(error)
             return .failure(error)
         }
+        
+        // Intercept the request to add authentication or other headers
+        intercept(&urlRequest)
         logger.logRequest(urlRequest)
         
         do {
@@ -117,13 +127,15 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     ///   - request: The upload request to be executed.
     ///   - data: The data to be uploaded.
     /// - Returns: A result containing either the network response or a network error.
-    @available(iOS 15.0, macOS 12.0, *)
     private func executeUploadAsync(request: NetworkRequest, data: Data) async -> Result<NetworkResponse, NetworkError> {
-        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+        guard var urlRequest = Commons.makeURLRequest(from: request) else {
             let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
             logger.logError(error)
             return .failure(error)
         }
+        
+        // Intercept the request to add authentication or other headers
+        intercept(&urlRequest)
         logger.logRequest(urlRequest)
         
         do {
@@ -138,13 +150,15 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Parameters:
     ///   - request: The download request to be executed.
     /// - Returns: A result containing either the file URL or a network error.
-    @available(iOS 15.0, macOS 12.0, *)
     private func executeDownloadAsync(request: NetworkRequest) async -> Result<URL, NetworkError> {
-        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+        guard var urlRequest = Commons.makeURLRequest(from: request) else {
             let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
             logger.logError(error)
             return .failure(error)
         }
+        
+        // Intercept the request to add authentication or other headers
+        intercept(&urlRequest)
         logger.logRequest(urlRequest)
         
         do {

@@ -31,7 +31,6 @@ jobs:
       - name: Generate code coverage report
         run: |
           mkdir -p coverage
-          echo pwd
           llvm-profdata merge -sparse TestResults.xcresult/coverage.profdata -o coverage/coverage.profdata
           llvm-cov show \
             .build/debug/SwiftNetworkerPackageTests.xctest \

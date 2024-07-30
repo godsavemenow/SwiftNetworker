@@ -4,15 +4,16 @@ import Foundation
 ///
 /// ## Overview
 /// The `Networker` class provides a comprehensive solution for performing network operations such as simple requests, requests with decodable responses,
-/// uploads, and downloads. It conforms to the `NetworkerProtocol` and includes methods for managing network tasks, handling responses, and logging activities.
-/// The class ensures that new requests can be locked and unlocked, providing a mechanism to control network traffic.
+/// uploads, and downloads. It conforms to the `NetworkerProtocol` and includes methods for managing network tasks, handling responses, logging activities,
+/// and caching responses. The class ensures that new requests can be locked and unlocked, providing a mechanism to control network traffic.
 ///
 /// The `Networker` uses `URLSession` to manage network requests and relies on the `ErrorHandlerProtocol` for error handling and `Logger` for logging requests
-/// and responses. This design allows for consistent and reusable network operations across different parts of an application.
+/// and responses. This design allows for consistent and reusable network operations across different parts of an application. The caching functionality is
+/// provided by a component that conforms to the `NetworkCacheProtocol`.
 ///
 /// ## Usage
-/// To use the `Networker`, either utilize the shared singleton instance or create a new instance. Configure it with custom error handler and logger if needed.
-/// Call the appropriate methods to perform network requests, upload data, or download files.
+/// To use the `Networker`, either utilize the shared singleton instance or create a new instance. Configure it with custom error handler, logger, request interceptors,
+/// and cache if needed. Call the appropriate methods to perform network requests, upload data, or download files.
 ///
 /// ```swift
 /// let networker = Networker.shared
@@ -29,6 +30,8 @@ public class Networker: NetworkerProtocol {
     private let queue = DispatchQueue(label: "com.networker.taskQueue")
     private let lockSemaphore = DispatchSemaphore(value: 1)
     private let requestInterceptors: [RequestInterceptorProtocol]
+    private let allowsCache: Bool
+    private let cache: NetworkCacheProtocol?
 
     /// Singleton instance
     public static let shared = Networker()
@@ -38,12 +41,18 @@ public class Networker: NetworkerProtocol {
     ///   - errorHandler: An instance of ErrorHandler for handling errors.
     ///   - logger: An instance of Logger for logging requests and responses.
     ///   - requestInterceptors: An array of `RequestInterceptorProtocol` for modifying requests.
+    ///   - allowsCache: A boolean indicating whether caching is enabled.
+    ///   - cache: An instance of `NetworkCacheProtocol` for caching responses.
     public init(errorHandler: ErrorHandlerProtocol = ErrorHandler(),
                 logger: LoggerProtocol = Logger(),
-                requestInterceptors: [RequestInterceptorProtocol] = []) {
+                requestInterceptors: [RequestInterceptorProtocol] = [],
+                allowsCache: Bool = true,
+                cache: NetworkCacheProtocol? = NetworkCache()) {
         self.errorHandler = errorHandler
         self.logger = logger
         self.requestInterceptors = requestInterceptors
+        self.allowsCache = allowsCache
+        self.cache = cache
     }
     
     // MARK: - Task Management
@@ -88,10 +97,19 @@ public class Networker: NetworkerProtocol {
     public func perform(_ request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
         lockSemaphore.wait()
         
+        if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString) {
+            completion(.success(cachedResponse))
+            lockSemaphore.signal()
+            return
+        }
+        
         let taskId = UUID()
         let task = execute(request: request) { [weak self] result in
             self?.queue.sync {
                 _ = self?.tasks.removeValue(forKey: taskId)
+            }
+            if self?.allowsCache == true, case .success(let response) = result, let urlString = request.url?.absoluteString {
+                self?.cache?.cacheResponse(response, for: urlString)
             }
             completion(result)
             self?.lockSemaphore.signal()
@@ -162,10 +180,21 @@ public class Networker: NetworkerProtocol {
     public func performDownload(_ request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) {
         lockSemaphore.wait()
         
+        if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString)?.URLResponse.url {
+            completion(.success(cachedResponse))
+            logger.logResponse("Success", message: "Cached Response")
+            lockSemaphore.signal()
+            return
+        }
+        
         let taskId = UUID()
         let task = executeDownload(request: request) { [weak self] result in
             self?.queue.sync {
                 _ = self?.tasks.removeValue(forKey: taskId)
+            }
+            if self?.allowsCache == true, case .success(let url) = result, let urlString = request.url?.absoluteString {
+                let networkResponse = NetworkResponse(data: Data(), URLResponse: URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil))
+                self?.cache?.cacheResponse(networkResponse, for: urlString)
             }
             completion(result)
             self?.lockSemaphore.signal()

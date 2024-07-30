@@ -22,7 +22,7 @@ import Foundation
 /// ```
 ///
 /// ## Properties
-public struct NetworkResponse {
+public class NetworkResponse {
     /// The raw data returned from the network request.
     public let data: Data
     

@@ -7,17 +7,19 @@ import Foundation
 /// This class conforms to the `AsyncNetworkerProtocol` and includes methods for performing basic network requests, requests with decodable responses,
 /// upload requests, and download requests.
 ///
-/// The class is designed to simplify the process of making network requests by handling common tasks such as logging, error handling, and response decoding.
-/// It uses `URLSession` for network communication and leverages the `ErrorHandlerProtocol` and `Logger` for error handling and logging, respectively.
+/// The class is designed to simplify the process of making network requests by handling common tasks such as logging, error handling, response decoding,
+/// and caching. It uses `URLSession` for network communication and leverages the `ErrorHandlerProtocol` and `Logger` for error handling and logging,
+/// respectively. The caching functionality is provided by a component that conforms to the `NetworkCacheProtocol`.
 ///
 /// ## Usage
 /// To use the `AsyncNetworker`, create an instance of the class and call the appropriate method for the network operation you want to perform. You can
-/// optionally provide your own implementations of `ErrorHandlerProtocol` and `Logger` for custom error handling and logging behavior.
+/// optionally provide your own implementations of `ErrorHandlerProtocol`, `Logger`, and `NetworkCacheProtocol` for custom error handling, logging,
+/// and caching behavior.
 ///
 /// ```swift
 /// @available(iOS 15.0, macOS 12.0, *)
 /// let networker = AsyncNetworker()
-/// let request = NetworkRequest(url: URL(string: "https://example.com")!)
+/// let request = NetworkRequest(urlString: "https://example.com")
 /// let result = await networker.performAsync(request)
 /// ```
 ///
@@ -28,20 +30,28 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     private let errorHandler: ErrorHandlerProtocol
     private let logger: LoggerProtocol
     private let requestInterceptors: [RequestInterceptorProtocol]
+    private let allowsCache: Bool
+    private let cache: NetworkCacheProtocol?
 
-    /// Initializes the AsyncNetworker with optional error handler, logger, and request interceptors.
+    /// Initializes the AsyncNetworker with optional error handler, logger, request interceptors, and cache option.
     /// - Parameters:
     ///   - errorHandler: An instance of `ErrorHandlerProtocol` for handling errors.
     ///   - logger: An instance of `LoggerProtocol` for logging requests and responses.
-    ///   - requestInterceptors: An array of `RequestInterceptor` for modifying requests.
+    ///   - requestInterceptors: An array of `RequestInterceptorProtocol` for modifying requests.
+    ///   - allowsCache: A boolean indicating whether caching is enabled.
+    ///   - cache: An instance of `NetworkCacheProtocol` for caching responses.
     public init(
         errorHandler: ErrorHandlerProtocol = ErrorHandler(),
         logger: LoggerProtocol = Logger(),
-        requestInterceptors: [RequestInterceptorProtocol] = []
+        requestInterceptors: [RequestInterceptorProtocol] = [],
+        allowsCache: Bool = true,
+        cache: NetworkCacheProtocol? = NetworkCache()
     ) {
         self.errorHandler = errorHandler
         self.logger = logger
         self.requestInterceptors = requestInterceptors
+        self.allowsCache = allowsCache
+        self.cache = cache
     }
     
     // MARK: - Simple Requests
@@ -50,7 +60,15 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Parameter request: The network request to be made.
     /// - Returns: A result containing either the network response or a network error.
     public func performAsync(_ request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
-        await executeAsync(request: request)
+        if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString) {
+            return .success(cachedResponse)
+        }
+        
+        let result = await executeAsync(request: request)
+        if allowsCache, case .success(let response) = result, let urlString = request.url?.absoluteString {
+            cache?.cacheResponse(response, for: urlString)
+        }
+        return result
     }
     
     /// Applies all interceptors to the given URLRequest.
@@ -67,7 +85,7 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     ///   - responseModel: The type to decode the response into.
     /// - Returns: A result containing either the decoded response or a network error.
     public func performAsync<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type) async -> Result<Response<T>, NetworkError> {
-        let result = await executeAsync(request: request)
+        let result = await performAsync(request)
         switch result {
         case .success(let response):
             return Commons.decodeResponse(response, to: responseModel, logger: logger, errorHandler: errorHandler)
@@ -84,7 +102,11 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     ///   - data: The data to be uploaded.
     /// - Returns: A result containing either the network response or a network error.
     public func performUploadAsync(_ request: NetworkRequest, data: Data) async -> Result<NetworkResponse, NetworkError> {
-        await executeUploadAsync(request: request, data: data)
+        let result = await executeUploadAsync(request: request, data: data)
+        if allowsCache, case .success(let response) = result, let urlString = request.url?.absoluteString {
+            cache?.cacheResponse(response, for: urlString)
+        }
+        return result
     }
     
     // MARK: - Download Requests

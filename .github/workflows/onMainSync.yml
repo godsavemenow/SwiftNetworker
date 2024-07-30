@@ -27,8 +27,8 @@ jobs:
 
       - name: Generate code coverage report with Slather
         run: |
-          xcodebuild -scheme SwiftNetworker -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES build test
-          slather coverage --scheme SwiftNetworker --output-directory coverage
+          mkdir -p coverage
+          slather coverage --build-directory .build/debug --output-directory coverage
 
       - name: Verify Coverage Report
         run: cat coverage/cobertura.xml

@@ -20,11 +20,9 @@ import Foundation
 /// let bodyData = "{\"key\":\"value\"}".data(using: .utf8)
 /// let request = NetworkRequest(url: url, method: .post, headers: headers, body: bodyData)
 /// ```
-///
-/// ## Properties
 public struct NetworkRequest {
     /// The URL for the network request.
-    public let url: URL
+    public var url: URL?
     
     /// The HTTP method for the network request.
     public let method: HTTPMethod
@@ -33,16 +31,41 @@ public struct NetworkRequest {
     public let headers: [String: String]?
     
     /// The body for the network request.
-    public let body: Data?
+    public var bodyData: Data? {
+        do {
+            guard let body = body else {
+                return nil
+            }
+            return try JSONEncoder().encode(body)
+        } catch {
+            return nil
+        }
+    }
     
-    /// Initializes a new instance of `NetworkRequest`.
+    public let body: Encodable?
+    
+    /// Initializes a new instance of `NetworkRequest` with a URL string.
+    ///
+    /// - Parameters:
+    ///   - urlString: The URL string for the network request.
+    ///   - method: The HTTP method for the network request.
+    ///   - headers: The headers for the network request. Default is nil.
+    ///   - body: The body for the network request. Default is nil.
+    public init(urlString: String, method: HTTPMethod, headers: [String: String]? = nil, body: Encodable? = nil) {
+        self.url = URL(string: urlString)
+        self.method = method
+        self.headers = headers
+        self.body = body
+    }
+    
+    /// Initializes a new instance of `NetworkRequest` with a URL.
     ///
     /// - Parameters:
     ///   - url: The URL for the network request.
     ///   - method: The HTTP method for the network request.
     ///   - headers: The headers for the network request. Default is nil.
     ///   - body: The body for the network request. Default is nil.
-    public init(url: URL, method: HTTPMethod, headers: [String: String]? = nil, body: Data? = nil) {
+    public init(url: URL, method: HTTPMethod, headers: [String: String]? = nil, body: Encodable? = nil) {
         self.url = url
         self.method = method
         self.headers = headers

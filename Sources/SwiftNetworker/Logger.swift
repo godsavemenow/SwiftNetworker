@@ -88,10 +88,11 @@ public class Logger: LoggerProtocol {
     
     func logResponse(_ title: String, message: String) {
         guard !isSilent else { return }
-        guard logLevel == .error else { return }
+        guard logLevel != .error else { return }
         var logMessage = "\n--- \(title) ---\n"
+        logMessage += "---- "
         logMessage += "\(message)"
-        logMessage += "-------------\n"
+        logMessage += " ----\n"
         logOutput(logMessage)
     }
     

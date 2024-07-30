@@ -103,11 +103,14 @@ class Commons {
     /// Creates a URL request from a network request.
     /// - Parameter request: The network request to be converted.
     /// - Returns: A URL request created from the network request.
-    static func makeURLRequest(from request: NetworkRequest) -> URLRequest {
-        var urlRequest = URLRequest(url: request.url)
+    static func makeURLRequest(from request: NetworkRequest) -> URLRequest? {
+        guard let url = request.url else {
+            return nil
+        }
+        var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = request.headers
-        urlRequest.httpBody = request.body
+        urlRequest.httpBody = request.bodyData
         return urlRequest
     }
     

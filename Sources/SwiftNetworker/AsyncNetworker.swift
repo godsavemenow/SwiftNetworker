@@ -97,7 +97,11 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Returns: A result containing either the network response or a network error.
     @available(iOS 15.0, macOS 12.0, *)
     private func executeAsync(request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
-        let urlRequest = Commons.makeURLRequest(from: request)
+        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+            let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
+            logger.logError(error)
+            return .failure(error)
+        }
         logger.logRequest(urlRequest)
         
         do {
@@ -115,7 +119,11 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Returns: A result containing either the network response or a network error.
     @available(iOS 15.0, macOS 12.0, *)
     private func executeUploadAsync(request: NetworkRequest, data: Data) async -> Result<NetworkResponse, NetworkError> {
-        let urlRequest = Commons.makeURLRequest(from: request)
+        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+            let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
+            logger.logError(error)
+            return .failure(error)
+        }
         logger.logRequest(urlRequest)
         
         do {
@@ -132,7 +140,11 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Returns: A result containing either the file URL or a network error.
     @available(iOS 15.0, macOS 12.0, *)
     private func executeDownloadAsync(request: NetworkRequest) async -> Result<URL, NetworkError> {
-        let urlRequest = Commons.makeURLRequest(from: request)
+        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+            let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
+            logger.logError(error)
+            return .failure(error)
+        }
         logger.logRequest(urlRequest)
         
         do {

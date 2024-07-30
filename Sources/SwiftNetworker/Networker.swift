@@ -92,6 +92,11 @@ public class Networker: NetworkerProtocol {
             completion(result)
             self?.lockSemaphore.signal()
         }
+        
+        guard let task = task else {
+            return
+        }
+        
         queue.sync {
             tasks[taskId] = task
         }
@@ -134,6 +139,10 @@ public class Networker: NetworkerProtocol {
             completion(result)
             self?.lockSemaphore.signal()
         }
+        guard let task = task else {
+            return
+        }
+        
         queue.sync {
             tasks[taskId] = task
         }
@@ -157,6 +166,11 @@ public class Networker: NetworkerProtocol {
             completion(result)
             self?.lockSemaphore.signal()
         }
+        
+        guard let task = task else {
+            return
+        }
+        
         queue.sync {
             tasks[taskId] = task
         }
@@ -170,8 +184,14 @@ public class Networker: NetworkerProtocol {
     ///   - request: The network request to be executed.
     ///   - completion: A closure that handles the result of the request.
     /// - Returns: The URLSessionDataTask associated with the request.
-    private func execute(request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) -> URLSessionDataTask {
-        let urlRequest = Commons.makeURLRequest(from: request)
+    private func execute(request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) -> URLSessionDataTask? {
+        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+            let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
+            logger.logError(error)
+            
+            completion(.failure(error))
+            return nil
+        }
         logger.logRequest(urlRequest)
         
         let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, error in
@@ -187,8 +207,13 @@ public class Networker: NetworkerProtocol {
     ///   - data: The data to be uploaded.
     ///   - completion: A closure that handles the result of the request.
     /// - Returns: The URLSessionUploadTask associated with the request.
-    private func executeUpload(request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) -> URLSessionUploadTask {
-        let urlRequest = Commons.makeURLRequest(from: request)
+    private func executeUpload(request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) -> URLSessionUploadTask? {
+        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+            let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
+            logger.logError(error)
+            completion(.failure(error))
+            return nil
+        }
         logger.logRequest(urlRequest)
         
         let task = URLSession.shared.uploadTask(with: urlRequest, from: data) { [weak self] data, response, error in
@@ -203,8 +228,13 @@ public class Networker: NetworkerProtocol {
     ///   - request: The download request to be executed.
     ///   - completion: A closure that handles the result of the request.
     /// - Returns: The URLSessionDownloadTask associated with the request.
-    private func executeDownload(request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) -> URLSessionDownloadTask {
-        let urlRequest = Commons.makeURLRequest(from: request)
+    private func executeDownload(request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) -> URLSessionDownloadTask? {
+        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+            let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
+            logger.logError(error)
+            completion(.failure(error))
+            return nil
+        }
         logger.logRequest(urlRequest)
         
         let task = URLSession.shared.downloadTask(with: urlRequest) { [weak self] url, response, error in

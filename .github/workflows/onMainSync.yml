@@ -20,7 +20,7 @@ jobs:
         run: swift build -v
 
       - name: Run tests with coverage
-        run: xcodebuild test -scheme SwiftNetworker -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -testPlan SwiftNetworker.xctestplan -resultBundlePath TestResults
+        run: xcodebuild test -scheme SwiftNetworker -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -testPlan Tests/SwiftNetworkerTests/SwiftNetworker.xctestplan -resultBundlePath TestResults
 
       - name: Verify TestResults
         run: ls -alh TestResults.xcresult
@@ -35,7 +35,7 @@ jobs:
           llvm-cov show \
             .build/debug/SwiftNetworkerPackageTests.xctest \
             -instr-profile=coverage/coverage.profdata \
-            -ignore-filename-regex="(Tests/.*|README\.md)" \
+            -ignore-filename-regex="(Tests/.*|README\\.md)" \
             -format=html \
             -output-dir=coverage
 
@@ -44,7 +44,7 @@ jobs:
           llvm-cov export \
             .build/debug/SwiftNetworkerPackageTests.xctest \
             -instr-profile=coverage/coverage.profdata \
-            -ignore-filename-regex="(Tests/.*|README\.md)" \
+            -ignore-filename-regex="(Tests/.*|README\\.md)" \
             -format=json \
             > coverage/coverage.json
 

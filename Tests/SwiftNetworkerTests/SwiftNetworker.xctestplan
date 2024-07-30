@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "4078C5E7-88F1-442C-BE40-1086D434FF1A",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwiftNetworkerTests",
+        "name" : "SwiftNetworkerTests"
+      }
+    }
+  ],
+  "version" : 1
+}

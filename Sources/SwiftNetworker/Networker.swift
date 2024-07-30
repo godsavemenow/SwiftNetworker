@@ -34,6 +34,7 @@ public class Networker: NetworkerProtocol {
     private let maxRetries: Int
     private let delayBetweenRetries: TimeInterval
     private let allowRetry: Bool
+    private let urlSession: URLSession
     
     /// Singleton instance
     public static let shared = Networker()
@@ -55,7 +56,8 @@ public class Networker: NetworkerProtocol {
                 cache: NetworkCacheProtocol? = NetworkCache(),
                 maxRetries: Int = 3,
                 delayBetweenRetries: TimeInterval = 2.0,
-                allowRetry: Bool = true) {
+                allowRetry: Bool = true,
+                urlSession: URLSession = URLSession(configuration: .default)) {
         self.errorHandler = errorHandler
         self.logger = logger
         self.requestInterceptors = requestInterceptors
@@ -64,6 +66,7 @@ public class Networker: NetworkerProtocol {
         self.maxRetries = maxRetries
         self.delayBetweenRetries = delayBetweenRetries
         self.allowRetry = allowRetry
+        self.urlSession = urlSession
     }
     
     // MARK: - Task Management
@@ -103,6 +106,7 @@ public class Networker: NetworkerProtocol {
             return
         }
         
+        let startTime = Date()
         let taskId = UUID()
         let task = execute(request: request) { [weak self] result in
             guard let self = self else { return }
@@ -110,6 +114,10 @@ public class Networker: NetworkerProtocol {
                 _ = self.tasks.removeValue(forKey: taskId)
             }
             
+            let endTime = Date()
+            let duration = endTime.timeIntervalSince(startTime)
+            logger.logResponse("Time Report", message: "Request completed in \(duration) seconds.")
+
             switch result {
             case .success(let response):
                 if self.allowsCache, let urlString = request.url?.absoluteString {
@@ -173,6 +181,7 @@ public class Networker: NetworkerProtocol {
     ///   - completion: A closure that handles the result of the request.
     public func performUpload(_ request: NetworkRequest, data: Data, retries: Int = 0, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
         
+        let startTime = Date()
         let taskId = UUID()
         let task = executeUpload(request: request, data: data) { [weak self] result in
             guard let self = self else { return }
@@ -180,6 +189,10 @@ public class Networker: NetworkerProtocol {
                 _ = self.tasks.removeValue(forKey: taskId)
             }
             
+            let endTime = Date()
+            let duration = endTime.timeIntervalSince(startTime)
+            logger.logResponse("Time Report", message: "Upload completed in \(duration) seconds.")
+
             switch result {
             case .success(let response):
                 completion(.success(response))
@@ -220,6 +233,7 @@ public class Networker: NetworkerProtocol {
             return
         }
         
+        let startTime = Date()
         let taskId = UUID()
         let task = executeDownload(request: request) { [weak self] result in
             guard let self = self else { return }
@@ -227,6 +241,10 @@ public class Networker: NetworkerProtocol {
                 _ = self.tasks.removeValue(forKey: taskId)
             }
             
+            let endTime = Date()
+            let duration = endTime.timeIntervalSince(startTime)
+            logger.logResponse("Time Report", message: "Download completed in \(duration) seconds.")
+
             switch result {
             case .success(let url):
                 if self.allowsCache, let urlString = request.url?.absoluteString {
@@ -273,7 +291,7 @@ public class Networker: NetworkerProtocol {
         }
         logger.logRequest(urlRequest)
         intercept(&urlRequest)
-        let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, error in
+        let task = urlSession.dataTask(with: urlRequest) { [weak self] data, response, error in
             guard let self = self else { return }
             self.handleResponse(data: data, response: response, error: error, completion: completion)
         }
@@ -303,7 +321,7 @@ public class Networker: NetworkerProtocol {
         logger.logRequest(urlRequest)
         intercept(&urlRequest)
         
-        let task = URLSession.shared.uploadTask(with: urlRequest, from: data) { [weak self] data, response, error in
+        let task = urlSession.uploadTask(with: urlRequest, from: data) { [weak self] data, response, error in
             guard let self = self else { return }
             self.handleResponse(data: data, response: response, error: error, completion: completion)
         }
@@ -326,7 +344,7 @@ public class Networker: NetworkerProtocol {
         logger.logRequest(urlRequest)
         
         intercept(&urlRequest)
-        let task = URLSession.shared.downloadTask(with: urlRequest) { [weak self] url, response, error in
+        let task = urlSession.downloadTask(with: urlRequest) { [weak self] url, response, error in
             guard let self = self else { return }
             self.handleDownloadResponse(url: url, response: response, error: error, completion: completion)
         }

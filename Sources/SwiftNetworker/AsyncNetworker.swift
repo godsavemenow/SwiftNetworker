@@ -35,6 +35,7 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     private let maxRetries: Int
     private let delayBetweenRetries: TimeInterval
     private let allowRetry: Bool
+    private let urlSession: URLSession
 
     /// Initializes the AsyncNetworker with optional error handler, logger, request interceptors, and cache option.
     /// - Parameters:
@@ -54,7 +55,8 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
         cache: NetworkCacheProtocol? = NetworkCache(),
         maxRetries: Int = 3,
         delayBetweenRetries: TimeInterval = 2.0,
-        allowRetry: Bool = true
+        allowRetry: Bool = true,
+        urlSession: URLSession = URLSession(configuration: .default)
     ) {
         self.errorHandler = errorHandler
         self.logger = logger
@@ -64,6 +66,7 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
         self.maxRetries = maxRetries
         self.delayBetweenRetries = delayBetweenRetries
         self.allowRetry = allowRetry
+        self.urlSession = urlSession
     }
     
     // MARK: - Simple Requests
@@ -78,8 +81,14 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
             logger.logResponse(cachedResponse)
             return .success(cachedResponse)
         }
-        
+
+        let startTime = Date()
         let result = await executeAsync(request: request)
+        let endTime = Date()
+        let duration = endTime.timeIntervalSince(startTime)
+        
+        logger.logResponse("Time Report", message: "Request completed in \(duration) seconds.")
+
         if allowsCache, case .success(let response) = result, let urlString = request.url?.absoluteString {
             cache?.cacheResponse(response, for: urlString)
         }
@@ -125,8 +134,13 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     ///   - retries: The current retry attempt count.
     /// - Returns: A result containing either the network response or a network error.
     public func performUploadAsync(_ request: NetworkRequest, data: Data, retries: Int = 0) async -> Result<NetworkResponse, NetworkError> {
+        let startTime = Date()
         let result = await executeUploadAsync(request: request, data: data)
+        let endTime = Date()
+        let duration = endTime.timeIntervalSince(startTime)
         
+        logger.logResponse("Time Report", message: "Upload completed in \(duration) seconds.")
+
         if allowRetry, case .failure = result, retries < maxRetries {
             try? await Task.sleep(nanoseconds: UInt64(delayBetweenRetries * 1_000_000_000))
             return await performUploadAsync(request, data: data, retries: retries + 1)
@@ -148,7 +162,13 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
             return .success(cachedResponse.URLResponse.url!)
         }
 
+        let startTime = Date()
         let result = await executeDownloadAsync(request: request)
+        let endTime = Date()
+        let duration = endTime.timeIntervalSince(startTime)
+        
+        logger.logResponse("Time Report", message: "Download completed in \(duration) seconds.")
+        
         if allowsCache, case .success(let url) = result, let urlString = request.url?.absoluteString {
             let networkResponse = NetworkResponse(data: Data(), URLResponse: URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil))
             cache?.cacheResponse(networkResponse, for: urlString)
@@ -180,7 +200,7 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
         logger.logRequest(urlRequest)
         
         do {
-            let (data, response) = try await URLSession.shared.data(for: urlRequest)
+            let (data, response) = try await urlSession.data(for: urlRequest)
             return Commons.handleResponse(data: data, response: response, logger: logger, errorHandler: errorHandler)
         } catch let error {
             return .failure(Commons.handleError(error, logger: logger, errorHandler: errorHandler))
@@ -204,7 +224,7 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
         logger.logRequest(urlRequest)
         
         do {
-            let (data, response) = try await URLSession.shared.upload(for: urlRequest, from: data)
+            let (data, response) = try await urlSession.upload(for: urlRequest, from: data)
             return Commons.handleResponse(data: data, response: response, logger: logger, errorHandler: errorHandler)
         } catch let error {
             return .failure(Commons.handleError(error, logger: logger, errorHandler: errorHandler))
@@ -227,7 +247,7 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
         logger.logRequest(urlRequest)
         
         do {
-            let (url, response) = try await URLSession.shared.download(for: urlRequest)
+            let (url, response) = try await urlSession.download(for: urlRequest)
             return Commons.handleDownloadResponse(url: url, response: response, logger: logger, errorHandler: errorHandler)
         } catch let error {
             return .failure(Commons.handleError(error, logger: logger, errorHandler: errorHandler))

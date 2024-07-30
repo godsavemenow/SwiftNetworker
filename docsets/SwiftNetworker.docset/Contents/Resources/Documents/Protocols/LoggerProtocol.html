@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Logger Class Reference</title>
+    <title>LoggerProtocol Protocol Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/Logger" class="dashAnchor"></a>
-    <a title="Logger Class Reference"></a>
+    <a name="//apple_ref/swift/Protocol/LoggerProtocol" class="dashAnchor"></a>
+    <a title="LoggerProtocol Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">SwiftNetworker Docs</a> (78% documented)</p>
@@ -29,9 +29,9 @@
       <p id="breadcrumbs">
         <a href="../index.html">SwiftNetworker</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        <a href="../Classes.html">Classes</a>
+        <a href="../Protocols.html">Protocols</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        Logger Class Reference
+        LoggerProtocol Protocol Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -122,36 +122,44 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>Logger</h1>
+            <h1>LoggerProtocol</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Logger</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a></span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">LoggerProtocol</span></code></pre>
 
                 </div>
               </div>
-            <p>A logger class to log network requests, responses, and errors.</p>
+            <p>A protocol defining the methods for logging network requests, responses, and errors.</p>
 <h2 id='overview' class='heading'>Overview</h2>
 
-<p>The <code>Logger</code> class provides a flexible and configurable mechanism for logging various aspects of network operations, including requests,
-responses, and errors. It conforms to the <code><a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a></code> and includes methods for logging network-related activities with different
-log levels such as info, debug, and error. The logging behavior can be customized using the log level, silent mode, and a custom log output
-closure.</p>
+<p>The <code>LoggerProtocol</code> provides a standardized interface for logging various aspects of network communication,
+including requests, responses, and errors. Conforming to this protocol allows for consistent logging across different
+network operations, facilitating debugging and monitoring.</p>
 
-<p>This class is designed to help developers monitor and debug network interactions by providing detailed logs of HTTP requests and responses.
-It can be easily integrated into network-related code and provides a simple API for logging.</p>
+<p>The protocol defines methods for logging outgoing network requests, incoming network responses, and errors that occur
+during network operations. Implementing these methods ensures that all relevant information about network interactions
+is captured and can be reviewed later.</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
-<p>To use the <code>Logger</code>, create an instance of the class and configure it with the desired log level, silent mode, and log output. Then,
-call the appropriate logging methods to log requests, responses, and errors.</p>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">logger</span> <span class="o">=</span> <span class="kt">Logger</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="o">.</span><span class="n">debug</span><span class="p">,</span> <span class="nv">isSilent</span><span class="p">:</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span> <span class="n">logMessage</span> <span class="k">in</span>
-    <span class="c1">// Custom log output, e.g., write to a file</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">logMessage</span><span class="p">)</span>
+<p>To conform to this protocol, a type must implement all the methods defined herein. This typically involves writing log
+entries to a file, console, or remote logging server.</p>
+<pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">MyLogger</span><span class="p">:</span> <span class="kt">LoggerProtocol</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">logRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom logic to log the request</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">NetworkResponse</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom logic to log the response</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom logic to log the response with a title and message</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">logError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">NetworkError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom logic to log the error</span>
+    <span class="p">}</span>
 <span class="p">}</span>
-<span class="n">logger</span><span class="o">.</span><span class="nf">logRequest</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-<span class="n">logger</span><span class="o">.</span><span class="nf">logResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-<span class="n">logger</span><span class="o">.</span><span class="nf">logError</span><span class="p">(</span><span class="n">networkError</span><span class="p">)</span>
 </code></pre>
+<h2 id='methods' class='heading'>Methods</h2>
 
           </section>
           <section class="section task-group-section">
@@ -160,107 +168,9 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker6LoggerC8LogLevelO"></a>
-                    <a name="//apple_ref/swift/Enum/LogLevel" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC8LogLevelO">LogLevel</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Enum representing the log level.</p>
-
-                        <a href="../Classes/Logger/LogLevel.html" class="slightly-smaller">See more</a>
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">LogLevel</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14SwiftNetworker6LoggerC8logLevel8isSilent0D6OutputA2C03LogE0O_SbySSctcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(logLevel:isSilent:logOutput:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC8logLevel8isSilent0D6OutputA2C03LogE0O_SbySSctcfc">init(logLevel:<wbr>isSilent:<wbr>logOutput:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Initializes a new logger instance.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="kt"><a href="../Classes/Logger/LogLevel.html">LogLevel</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">debug</span><span class="p">,</span> <span class="nv">isSilent</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">logOutput</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="nv">$0</span><span class="p">)</span> <span class="p">})</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>logLevel</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The level of logging desired. Default is <code>.info</code>.</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isSilent</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Boolean to determine if the logger should print. Default is <code>false</code>.</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>logOutput</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Closure to handle the log output. Default is <code>print</code>.</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14SwiftNetworker6LoggerC10logRequestyy10Foundation10URLRequestVF"></a>
+                    <a name="/s:14SwiftNetworker14LoggerProtocolP10logRequestyy10Foundation10URLRequestVF"></a>
                     <a name="//apple_ref/swift/Method/logRequest(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC10logRequestyy10Foundation10URLRequestVF">logRequest(_:<wbr>)</a>
+                    <a class="token" href="#/s:14SwiftNetworker14LoggerProtocolP10logRequestyy10Foundation10URLRequestVF">logRequest(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -268,14 +178,16 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Logs a network request.</p>
+                        <p>Logs an outgoing network request.</p>
+
+<p>This method logs the details of an outgoing network request, including the URL, HTTP method, headers, and body.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -291,7 +203,7 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The URL request to be logged.</p>
+                                  <p>The network request to be logged.</p>
                                 </div>
                               </td>
                             </tr>
@@ -304,9 +216,9 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker6LoggerC11logResponseyyAA07NetworkE0CF"></a>
+                    <a name="/s:14SwiftNetworker14LoggerProtocolP11logResponseyyAA07NetworkF0CF"></a>
                     <a name="//apple_ref/swift/Method/logResponse(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC11logResponseyyAA07NetworkE0CF">logResponse(_:<wbr>)</a>
+                    <a class="token" href="#/s:14SwiftNetworker14LoggerProtocolP11logResponseyyAA07NetworkF0CF">logResponse(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -314,14 +226,16 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Logs a network response.</p>
+                        <p>Logs an incoming network response.</p>
+
+<p>This method logs the details of an incoming network response, including the status code, headers, and body.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -360,15 +274,50 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        
+                        <p>Logs a response with a custom title and message.</p>
+
+<p>This method logs a response with a specified title and message. It can be used for logging informational messages
+or custom responses.</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>title</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The title of the log entry.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>message</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The message of the log entry.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>
@@ -376,9 +325,9 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker6LoggerC8logErroryyAA07NetworkE0VF"></a>
+                    <a name="/s:14SwiftNetworker14LoggerProtocolP8logErroryyAA07NetworkF0VF"></a>
                     <a name="//apple_ref/swift/Method/logError(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC8logErroryyAA07NetworkE0VF">logError(_:<wbr>)</a>
+                    <a class="token" href="#/s:14SwiftNetworker14LoggerProtocolP8logErroryyAA07NetworkF0VF">logError(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -388,12 +337,14 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                       <div class="abstract">
                         <p>Logs a network error.</p>
 
+<p>This method logs the details of a network error, including the error message and any relevant error codes.</p>
+
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">logError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>

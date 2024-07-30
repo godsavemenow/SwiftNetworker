@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>ErrorHandler Class Reference</title>
+    <title>NetworkCacheProtocol Protocol Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/ErrorHandler" class="dashAnchor"></a>
-    <a title="ErrorHandler Class Reference"></a>
+    <a name="//apple_ref/swift/Protocol/NetworkCacheProtocol" class="dashAnchor"></a>
+    <a title="NetworkCacheProtocol Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">SwiftNetworker Docs</a> (78% documented)</p>
@@ -29,9 +29,9 @@
       <p id="breadcrumbs">
         <a href="../index.html">SwiftNetworker</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        <a href="../Classes.html">Classes</a>
+        <a href="../Protocols.html">Protocols</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        ErrorHandler Class Reference
+        NetworkCacheProtocol Protocol Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -122,30 +122,40 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>ErrorHandler</h1>
+            <h1>NetworkCacheProtocol</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ErrorHandler</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">NetworkCacheProtocol</span></code></pre>
 
                 </div>
               </div>
-            <p>A class responsible for handling various types of errors and converting them into <code><a href="../Structs/NetworkError.html">NetworkError</a></code> instances.</p>
+            <p>A protocol defining the methods for caching network responses.</p>
 <h2 id='overview' class='heading'>Overview</h2>
 
-<p>The <code>ErrorHandler</code> class provides a centralized mechanism for handling errors that occur during network operations.
-It conforms to the <code><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> and includes methods for converting different types of errors, such as HTTP
-status code errors, decoding errors, and URL errors, into standardized <code><a href="../Structs/NetworkError.html">NetworkError</a></code> instances.</p>
-
-<p>This class is designed to ensure consistent error handling across network operations, making it easier to manage and
-debug errors. By encapsulating error handling logic within this class, developers can maintain cleaner and more maintainable
-network-related code.</p>
+<p>The <code>NetworkCacheProtocol</code> protocol provides a blueprint for caching network responses. It defines methods for retrieving and caching responses associated with network request URLs.
+Implementations of this protocol can be used to provide caching functionality within network handling classes, improving performance and efficiency by avoiding repeated network calls.</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
-<p>To use the <code>ErrorHandler</code>, create an instance of the class and call the <code>handle</code> method with the error, optional data, and response
-received from a network request. The method will return a <code><a href="../Structs/NetworkError.html">NetworkError</a></code> instance that represents the handled error.</p>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">errorHandler</span> <span class="o">=</span> <span class="kt">ErrorHandler</span><span class="p">()</span>
-<span class="k">let</span> <span class="nv">networkError</span> <span class="o">=</span> <span class="n">errorHandler</span><span class="o">.</span><span class="nf">handle</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="n">responseData</span><span class="p">,</span> <span class="nv">response</span><span class="p">:</span> <span class="n">urlResponse</span><span class="p">)</span>
+<p>To conform to the <code>NetworkCacheProtocol</code>, a class must implement the following methods:</p>
+
+<ul>
+<li><code>getCachedResponse(for:)</code> to retrieve cached responses.</li>
+<li><code>cacheResponse(_:for:)</code> to store responses in the cache.</li>
+</ul>
+
+<p>Example implementation:</p>
+<pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">NetworkCache</span><span class="p">:</span> <span class="kt">NetworkCacheProtocol</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="k">let</span> <span class="nv">cache</span> <span class="o">=</span> <span class="kt">NSCache</span><span class="o">&lt;</span><span class="kt">NSString</span><span class="p">,</span> <span class="kt">NetworkResponse</span><span class="o">&gt;</span><span class="p">()</span>
+
+    <span class="kd">func</span> <span class="nf">getCachedResponse</span><span class="p">(</span><span class="k">for</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NetworkResponse</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">cache</span><span class="o">.</span><span class="nf">object</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="n">urlString</span> <span class="k">as</span> <span class="kt">NSString</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">cacheResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">NetworkResponse</span><span class="p">,</span> <span class="k">for</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cache</span><span class="o">.</span><span class="nf">setObject</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">urlString</span> <span class="k">as</span> <span class="kt">NSString</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre>
 
           </section>
@@ -155,9 +165,9 @@ received from a network request. The method will return a <code><a href="../Stru
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker12ErrorHandlerCACycfc"></a>
-                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker12ErrorHandlerCACycfc">init()</a>
+                    <a name="/s:14SwiftNetworker20NetworkCacheProtocolP17getCachedResponse3forAA0cH0CSgSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/getCachedResponse(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker20NetworkCacheProtocolP17getCachedResponse3forAA0cH0CSgSS_tF">getCachedResponse(for:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -165,41 +175,14 @@ received from a network request. The method will return a <code><a href="../Stru
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a new instance of <code>ErrorHandler</code>.</p>
+                        <p>Retrieves a cached response for a given network request URL string.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14SwiftNetworker12ErrorHandlerC6handle_4data8responseAA07NetworkC0Vs0C0_pSg_10Foundation4DataVSgSo13NSURLResponseCSgtF"></a>
-                    <a name="//apple_ref/swift/Method/handle(_:data:response:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker12ErrorHandlerC6handle_4data8responseAA07NetworkC0Vs0C0_pSg_10Foundation4DataVSgSo13NSURLResponseCSgtF">handle(_:<wbr>data:<wbr>response:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Handles an error and its associated URL response, returning a <code><a href="../Structs/NetworkError.html">NetworkError</a></code>.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">handle</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">Error</span><span class="p">?,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?,</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">URLResponse</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getCachedResponse</span><span class="p">(</span><span class="k">for</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -210,24 +193,12 @@ received from a network request. The method will return a <code><a href="../Stru
                             <tr>
                               <td>
                                 <code>
-                                <em>error</em>
+                                <em>urlString</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>The error to handle.</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>response</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>The URL response associated with the error.</p>
+                                  <p>The URL string of the network request.</p>
                                 </div>
                               </td>
                             </tr>
@@ -236,7 +207,65 @@ received from a network request. The method will return a <code><a href="../Stru
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>A <code><a href="../Structs/NetworkError.html">NetworkError</a></code> representing the handled error.</p>
+                        <p>A cached network response if available, or nil.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker20NetworkCacheProtocolP13cacheResponse_3foryAA0cG0C_SStF"></a>
+                    <a name="//apple_ref/swift/Method/cacheResponse(_:for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker20NetworkCacheProtocolP13cacheResponse_3foryAA0cG0C_SStF">cacheResponse(_:<wbr>for:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Caches a network response for a given network request URL string.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">cacheResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="k">for</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>response</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The network response to cache.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>urlString</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL string of the network request associated with the response.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </section>
                   </div>

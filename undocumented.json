@@ -174,6 +174,20 @@
       "symbol": "NetworkErrorCases.permanentRedirect(_:)",
       "symbol_kind": "source.lang.swift.decl.enumelement",
       "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/Model/NetworkRequest.swift",
+      "line": 45,
+      "symbol": "NetworkRequest.body",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/runner/work/SwiftNetworker/SwiftNetworker/Sources/SwiftNetworker/NetworkCache.swift",
+      "line": 22,
+      "symbol": "NetworkCache.cache",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
     }
   ],
   "source_directory": "/Users/runner/work/SwiftNetworker/SwiftNetworker"

@@ -17,7 +17,7 @@
     <a title="Logger Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">SwiftNetworker Docs</a> (76% documented)</p>
+        <p><a href="../index.html">SwiftNetworker Docs</a> (78% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -44,6 +44,9 @@
                 <a href="../Classes/AsyncNetworker.html">AsyncNetworker</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes.html#/s:14SwiftNetworker21CachedNetworkResponseC">CachedNetworkResponse</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/ErrorHandler.html">ErrorHandler</a>
               </li>
               <li class="nav-group-task">
@@ -51,6 +54,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Logger/LogLevel.html">– LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkCache.html">NetworkCache</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkResponse.html">NetworkResponse</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Networker.html">Networker</a>
@@ -81,7 +90,16 @@
                 <a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/NetworkerProtocol.html">NetworkerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestInterceptorProtocol.html">RequestInterceptorProtocol</a>
               </li>
             </ul>
           </li>
@@ -93,9 +111,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/NetworkRequest.html">NetworkRequest</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/NetworkResponse.html">NetworkResponse</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/Response.html">Response</a>
@@ -111,7 +126,7 @@
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Logger</span> <span class="p">:</span> <span class="kt">LoggerProtocol</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Logger</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a></span></code></pre>
 
                 </div>
               </div>
@@ -119,7 +134,7 @@
 <h2 id='overview' class='heading'>Overview</h2>
 
 <p>The <code>Logger</code> class provides a flexible and configurable mechanism for logging various aspects of network operations, including requests,
-responses, and errors. It conforms to the <code>LoggerProtocol</code> and includes methods for logging network-related activities with different
+responses, and errors. It conforms to the <code><a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a></code> and includes methods for logging network-related activities with different
 log levels such as info, debug, and error. The logging behavior can be customized using the log level, silent mode, and a custom log output
 closure.</p>
 
@@ -240,12 +255,176 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker6LoggerC10logRequestyy10Foundation10URLRequestVF"></a>
+                    <a name="//apple_ref/swift/Method/logRequest(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker6LoggerC10logRequestyy10Foundation10URLRequestVF">logRequest(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs a network request.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>request</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The URL request to be logged.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker6LoggerC11logResponseyyAA07NetworkE0CF"></a>
+                    <a name="//apple_ref/swift/Method/logResponse(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker6LoggerC11logResponseyyAA07NetworkE0CF">logResponse(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs a network response.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>response</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The network response to be logged.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker14LoggerProtocolP11logResponse_7messageySS_SStF"></a>
+                    <a name="//apple_ref/swift/Method/logResponse(_:message:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker14LoggerProtocolP11logResponse_7messageySS_SStF">logResponse(_:<wbr>message:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker6LoggerC8logErroryyAA07NetworkE0VF"></a>
+                    <a name="//apple_ref/swift/Method/logError(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker6LoggerC8logErroryyAA07NetworkE0VF">logError(_:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Logs a network error.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>error</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The network error to be logged.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-29)</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

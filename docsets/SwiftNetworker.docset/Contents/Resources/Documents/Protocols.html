@@ -17,7 +17,7 @@
     <a title="Protocols  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">SwiftNetworker Docs</a> (76% documented)</p>
+        <p><a href="index.html">SwiftNetworker Docs</a> (78% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -42,6 +42,9 @@
                 <a href="Classes/AsyncNetworker.html">AsyncNetworker</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes.html#/s:14SwiftNetworker21CachedNetworkResponseC">CachedNetworkResponse</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/ErrorHandler.html">ErrorHandler</a>
               </li>
               <li class="nav-group-task">
@@ -49,6 +52,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="Classes/Logger/LogLevel.html">– LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/NetworkCache.html">NetworkCache</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/NetworkResponse.html">NetworkResponse</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/Networker.html">Networker</a>
@@ -79,7 +88,16 @@
                 <a href="Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="Protocols/LoggerProtocol.html">LoggerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Protocols/NetworkerProtocol.html">NetworkerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/RequestInterceptorProtocol.html">RequestInterceptorProtocol</a>
               </li>
             </ul>
           </li>
@@ -91,9 +109,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="Structs/NetworkRequest.html">NetworkRequest</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="Structs/NetworkResponse.html">NetworkResponse</a>
               </li>
               <li class="nav-group-task">
                 <a href="Structs/Response.html">Response</a>
@@ -210,6 +225,117 @@ an error, along with optional data and response, and returning a <code><a href="
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:14SwiftNetworker14LoggerProtocolP"></a>
+                    <a name="//apple_ref/swift/Protocol/LoggerProtocol" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker14LoggerProtocolP">LoggerProtocol</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A protocol defining the methods for logging network requests, responses, and errors.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>LoggerProtocol</code> provides a standardized interface for logging various aspects of network communication,
+including requests, responses, and errors. Conforming to this protocol allows for consistent logging across different
+network operations, facilitating debugging and monitoring.</p>
+
+<p>The protocol defines methods for logging outgoing network requests, incoming network responses, and errors that occur
+during network operations. Implementing these methods ensures that all relevant information about network interactions
+is captured and can be reviewed later.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To conform to this protocol, a type must implement all the methods defined herein. This typically involves writing log
+entries to a file, console, or remote logging server.</p>
+<pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">MyLogger</span><span class="p">:</span> <span class="kt">LoggerProtocol</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">logRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom logic to log the request</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">NetworkResponse</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom logic to log the response</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom logic to log the response with a title and message</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">logError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">NetworkError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Custom logic to log the error</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+<h2 id='methods' class='heading'>Methods</h2>
+
+                        <a href="Protocols/LoggerProtocol.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">LoggerProtocol</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker20NetworkCacheProtocolP"></a>
+                    <a name="//apple_ref/swift/Protocol/NetworkCacheProtocol" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker20NetworkCacheProtocolP">NetworkCacheProtocol</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A protocol defining the methods for caching network responses.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>The <code>NetworkCacheProtocol</code> protocol provides a blueprint for caching network responses. It defines methods for retrieving and caching responses associated with network request URLs.
+Implementations of this protocol can be used to provide caching functionality within network handling classes, improving performance and efficiency by avoiding repeated network calls.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>To conform to the <code>NetworkCacheProtocol</code>, a class must implement the following methods:</p>
+
+<ul>
+<li><code>getCachedResponse(for:)</code> to retrieve cached responses.</li>
+<li><code>cacheResponse(_:for:)</code> to store responses in the cache.</li>
+</ul>
+
+<p>Example implementation:</p>
+<pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">NetworkCache</span><span class="p">:</span> <span class="kt">NetworkCacheProtocol</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="k">let</span> <span class="nv">cache</span> <span class="o">=</span> <span class="kt">NSCache</span><span class="o">&lt;</span><span class="kt">NSString</span><span class="p">,</span> <span class="kt">NetworkResponse</span><span class="o">&gt;</span><span class="p">()</span>
+
+    <span class="kd">func</span> <span class="nf">getCachedResponse</span><span class="p">(</span><span class="k">for</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NetworkResponse</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">cache</span><span class="o">.</span><span class="nf">object</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="n">urlString</span> <span class="k">as</span> <span class="kt">NSString</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">cacheResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt">NetworkResponse</span><span class="p">,</span> <span class="k">for</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cache</span><span class="o">.</span><span class="nf">setObject</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">urlString</span> <span class="k">as</span> <span class="kt">NSString</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+                        <a href="Protocols/NetworkCacheProtocol.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">NetworkCacheProtocol</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:14SwiftNetworker0B8ProtocolP"></a>
                     <a name="//apple_ref/swift/Protocol/NetworkerProtocol" class="dashAnchor"></a>
                     <a class="token" href="#/s:14SwiftNetworker0B8ProtocolP">NetworkerProtocol</a>
@@ -236,16 +362,16 @@ successful response or a network error.</p>
 network requests using URLSession, handling the responses, and invoking the completion handlers with the appropriate
 results.</p>
 <pre class="highlight swift"><code><span class="kd">class</span> <span class="kt">MyNetworker</span><span class="p">:</span> <span class="kt">NetworkerProtocol</span> <span class="p">{</span>
-    <span class="kd">func</span> <span class="nf">perform</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">NetworkRequest</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">NetworkResponse</span><span class="p">,</span> <span class="kt">NetworkError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">perform</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">NetworkRequest</span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">NetworkResponse</span><span class="p">,</span> <span class="kt">NetworkError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Implementation of the perform method</span>
     <span class="p">}</span>
-    <span class="kd">func</span> <span class="n">perform</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Decodable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">NetworkRequest</span><span class="p">,</span> <span class="nv">responseModel</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Response</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">NetworkError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="n">perform</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Decodable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">NetworkRequest</span><span class="p">,</span> <span class="nv">responseModel</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">Response</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">NetworkError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Implementation of the perform method with decodable response</span>
     <span class="p">}</span>
-    <span class="kd">func</span> <span class="nf">performUpload</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">NetworkRequest</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">NetworkResponse</span><span class="p">,</span> <span class="kt">NetworkError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">performUpload</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">NetworkRequest</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">NetworkResponse</span><span class="p">,</span> <span class="kt">NetworkError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Implementation of the performUpload method</span>
     <span class="p">}</span>
-    <span class="kd">func</span> <span class="nf">performDownload</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">NetworkRequest</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URL</span><span class="p">,</span> <span class="kt">NetworkError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">performDownload</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">NetworkRequest</span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URL</span><span class="p">,</span> <span class="kt">NetworkError</span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
         <span class="c1">// Implementation of the performDownload method</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -265,12 +391,59 @@ results.</p>
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:14SwiftNetworker26RequestInterceptorProtocolP"></a>
+                    <a name="//apple_ref/swift/Protocol/RequestInterceptorProtocol" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker26RequestInterceptorProtocolP">RequestInterceptorProtocol</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A protocol for request interceptors that can modify a URLRequest before it is sent.</p>
+<h2 id='overview' class='heading'>Overview</h2>
+
+<p>Request interceptors provide a way to modify <code>URLRequest</code> objects before they are sent over the network.
+This can be used to add authentication headers, log requests, or modify the request in any other way.</p>
+<h2 id='usage' class='heading'>Usage</h2>
+
+<p>Implement the <code>intercept(_:)</code> method to modify the request as needed.</p>
+<pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">RequestInterceptor</span><span class="p">:</span> <span class="kt">RequestInterceptor</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="k">let</span> <span class="nv">token</span><span class="p">:</span> <span class="kt">String</span>
+
+    <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">token</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">token</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">intercept</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="k">inout</span> <span class="kt">URLRequest</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">request</span><span class="o">.</span><span class="nf">setValue</span><span class="p">(</span><span class="s">"Bearer </span><span class="se">\(</span><span class="n">token</span><span class="se">)</span><span class="s">"</span><span class="p">,</span> <span class="nv">forHTTPHeaderField</span><span class="p">:</span> <span class="s">"Authorization"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+
+                        <a href="Protocols/RequestInterceptorProtocol.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">RequestInterceptorProtocol</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-29)</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

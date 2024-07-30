@@ -17,7 +17,7 @@
     <a title="AsyncNetworkerProtocol Protocol Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">SwiftNetworker Docs</a> (76% documented)</p>
+        <p><a href="../index.html">SwiftNetworker Docs</a> (78% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -44,6 +44,9 @@
                 <a href="../Classes/AsyncNetworker.html">AsyncNetworker</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes.html#/s:14SwiftNetworker21CachedNetworkResponseC">CachedNetworkResponse</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/ErrorHandler.html">ErrorHandler</a>
               </li>
               <li class="nav-group-task">
@@ -51,6 +54,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Logger/LogLevel.html">– LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkCache.html">NetworkCache</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkResponse.html">NetworkResponse</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Networker.html">Networker</a>
@@ -81,7 +90,16 @@
                 <a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/NetworkerProtocol.html">NetworkerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestInterceptorProtocol.html">RequestInterceptorProtocol</a>
               </li>
             </ul>
           </li>
@@ -93,9 +111,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/NetworkRequest.html">NetworkRequest</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/NetworkResponse.html">NetworkResponse</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/Response.html">Response</a>
@@ -144,9 +159,9 @@ uploading a file to a server, or downloading content from the internet.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker05AsyncB8ProtocolP07performC0ys6ResultOyAA15NetworkResponseVAA0G5ErrorVGAA0G7RequestVYaF"></a>
-                    <a name="//apple_ref/swift/Method/performAsync(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker05AsyncB8ProtocolP07performC0ys6ResultOyAA15NetworkResponseVAA0G5ErrorVGAA0G7RequestVYaF">performAsync(_:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker05AsyncB8ProtocolP07performC0_7retriess6ResultOyAA15NetworkResponseCAA0H5ErrorVGAA0H7RequestV_SitYaF"></a>
+                    <a name="//apple_ref/swift/Method/performAsync(_:retries:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB8ProtocolP07performC0_7retriess6ResultOyAA15NetworkResponseCAA0H5ErrorVGAA0H7RequestV_SitYaF">performAsync(_:<wbr>retries:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Asynchronous
@@ -166,7 +181,7 @@ uploading a file to a server, or downloading content from the internet.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">performAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">performAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -186,6 +201,18 @@ uploading a file to a server, or downloading content from the internet.</p>
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The current retry attempt count.</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -199,9 +226,9 @@ uploading a file to a server, or downloading content from the internet.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker05AsyncB8ProtocolP07performC0_13responseModels6ResultOyAA8ResponseVyqd__GAA12NetworkErrorVGAA0J7RequestV_qd__mtYaSeRd__lF"></a>
-                    <a name="//apple_ref/swift/Method/performAsync(_:responseModel:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker05AsyncB8ProtocolP07performC0_13responseModels6ResultOyAA8ResponseVyqd__GAA12NetworkErrorVGAA0J7RequestV_qd__mtYaSeRd__lF">performAsync(_:<wbr>responseModel:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker05AsyncB8ProtocolP07performC0_13responseModel7retriess6ResultOyAA8ResponseVyqd__GAA12NetworkErrorVGAA0K7RequestV_qd__mSitYaSeRd__lF"></a>
+                    <a name="//apple_ref/swift/Method/performAsync(_:responseModel:retries:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB8ProtocolP07performC0_13responseModel7retriess6ResultOyAA8ResponseVyqd__GAA12NetworkErrorVGAA0K7RequestV_qd__mSitYaSeRd__lF">performAsync(_:<wbr>responseModel:<wbr>retries:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Asynchronous
@@ -221,7 +248,7 @@ uploading a file to a server, or downloading content from the internet.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="n">performAsync</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">responseModel</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/Response.html">Response</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Decodable</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="n">performAsync</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">responseModel</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/Response.html">Response</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Decodable</span></code></pre>
 
                         </div>
                       </div>
@@ -253,6 +280,18 @@ uploading a file to a server, or downloading content from the internet.</p>
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The current retry attempt count.</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -266,9 +305,9 @@ uploading a file to a server, or downloading content from the internet.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker05AsyncB8ProtocolP013performUploadC0_4datas6ResultOyAA15NetworkResponseVAA0I5ErrorVGAA0I7RequestV_10Foundation4DataVtYaF"></a>
-                    <a name="//apple_ref/swift/Method/performUploadAsync(_:data:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker05AsyncB8ProtocolP013performUploadC0_4datas6ResultOyAA15NetworkResponseVAA0I5ErrorVGAA0I7RequestV_10Foundation4DataVtYaF">performUploadAsync(_:<wbr>data:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker05AsyncB8ProtocolP013performUploadC0_4data7retriess6ResultOyAA15NetworkResponseCAA0J5ErrorVGAA0J7RequestV_10Foundation4DataVSitYaF"></a>
+                    <a name="//apple_ref/swift/Method/performUploadAsync(_:data:retries:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB8ProtocolP013performUploadC0_4data7retriess6ResultOyAA15NetworkResponseCAA0J5ErrorVGAA0J7RequestV_10Foundation4DataVSitYaF">performUploadAsync(_:<wbr>data:<wbr>retries:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Asynchronous
@@ -288,7 +327,7 @@ uploading a file to a server, or downloading content from the internet.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">performUploadAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">performUploadAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -320,6 +359,18 @@ uploading a file to a server, or downloading content from the internet.</p>
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The current retry attempt count.</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -333,9 +384,9 @@ uploading a file to a server, or downloading content from the internet.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker05AsyncB8ProtocolP015performDownloadC0ys6ResultOy10Foundation3URLVAA12NetworkErrorVGAA0J7RequestVYaF"></a>
-                    <a name="//apple_ref/swift/Method/performDownloadAsync(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker05AsyncB8ProtocolP015performDownloadC0ys6ResultOy10Foundation3URLVAA12NetworkErrorVGAA0J7RequestVYaF">performDownloadAsync(_:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker05AsyncB8ProtocolP015performDownloadC0_7retriess6ResultOy10Foundation3URLVAA12NetworkErrorVGAA0K7RequestV_SitYaF"></a>
+                    <a name="//apple_ref/swift/Method/performDownloadAsync(_:retries:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker05AsyncB8ProtocolP015performDownloadC0_7retriess6ResultOy10Foundation3URLVAA12NetworkErrorVGAA0K7RequestV_SitYaF">performDownloadAsync(_:<wbr>retries:<wbr>)</a>
                     </code>
                       <span class="declaration-note">
                         Asynchronous
@@ -355,7 +406,7 @@ uploading a file to a server, or downloading content from the internet.</p>
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">performDownloadAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URL</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">performDownloadAsync</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="n">async</span> <span class="o">-&gt;</span> <span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URL</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -375,6 +426,18 @@ uploading a file to a server, or downloading content from the internet.</p>
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The current retry attempt count.</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -390,7 +453,7 @@ uploading a file to a server, or downloading content from the internet.</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-29)</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

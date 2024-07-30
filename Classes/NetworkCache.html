@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Logger Class Reference</title>
+    <title>NetworkCache Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Class/Logger" class="dashAnchor"></a>
-    <a title="Logger Class Reference"></a>
+    <a name="//apple_ref/swift/Class/NetworkCache" class="dashAnchor"></a>
+    <a title="NetworkCache Class Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">SwiftNetworker Docs</a> (78% documented)</p>
@@ -31,7 +31,7 @@
         <img id="carat" src="../img/carat.png" alt=""/>
         <a href="../Classes.html">Classes</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        Logger Class Reference
+        NetworkCache Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -122,35 +122,30 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>Logger</h1>
+            <h1>NetworkCache</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">Logger</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a></span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">NetworkCache</span> <span class="p">:</span> <span class="kt"><a href="../Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a></span></code></pre>
 
                 </div>
               </div>
-            <p>A logger class to log network requests, responses, and errors.</p>
+            <p>A class responsible for caching network responses.</p>
 <h2 id='overview' class='heading'>Overview</h2>
 
-<p>The <code>Logger</code> class provides a flexible and configurable mechanism for logging various aspects of network operations, including requests,
-responses, and errors. It conforms to the <code><a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a></code> and includes methods for logging network-related activities with different
-log levels such as info, debug, and error. The logging behavior can be customized using the log level, silent mode, and a custom log output
-closure.</p>
-
-<p>This class is designed to help developers monitor and debug network interactions by providing detailed logs of HTTP requests and responses.
-It can be easily integrated into network-related code and provides a simple API for logging.</p>
+<p>The <code>NetworkCache</code> class provides an in-memory cache for network responses. It conforms to the <code><a href="../Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a></code> protocol, allowing it to be used interchangeably with other cache implementations.
+The class uses <code>NSCache</code> to store responses, ensuring that frequently accessed data is readily available without repeated network calls.
+It also supports cache size limitations and response expiration policies.</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
-<p>To use the <code>Logger</code>, create an instance of the class and configure it with the desired log level, silent mode, and log output. Then,
-call the appropriate logging methods to log requests, responses, and errors.</p>
-<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">logger</span> <span class="o">=</span> <span class="kt">Logger</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="o">.</span><span class="n">debug</span><span class="p">,</span> <span class="nv">isSilent</span><span class="p">:</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span> <span class="n">logMessage</span> <span class="k">in</span>
-    <span class="c1">// Custom log output, e.g., write to a file</span>
-    <span class="nf">print</span><span class="p">(</span><span class="n">logMessage</span><span class="p">)</span>
-<span class="p">}</span>
-<span class="n">logger</span><span class="o">.</span><span class="nf">logRequest</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
-<span class="n">logger</span><span class="o">.</span><span class="nf">logResponse</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-<span class="n">logger</span><span class="o">.</span><span class="nf">logError</span><span class="p">(</span><span class="n">networkError</span><span class="p">)</span>
+<p>Create an instance of <code>NetworkCache</code> and use its methods to cache and retrieve network responses.
+This class is typically used within network handling classes to provide caching functionality.</p>
+
+<p>Example:</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">cache</span> <span class="o">=</span> <span class="kt">NetworkCache</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">response</span> <span class="o">=</span> <span class="kt">NetworkResponse</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">someData</span><span class="p">,</span> <span class="kt">URLResponse</span><span class="p">:</span> <span class="n">someResponse</span><span class="p">)</span>
+<span class="n">cache</span><span class="o">.</span><span class="nf">cacheResponse</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="s">"https://example.com"</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">cachedResponse</span> <span class="o">=</span> <span class="n">cache</span><span class="o">.</span><span class="nf">getCachedResponse</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="s">"https://example.com"</span><span class="p">)</span>
 </code></pre>
 
           </section>
@@ -160,9 +155,9 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker6LoggerC8LogLevelO"></a>
-                    <a name="//apple_ref/swift/Enum/LogLevel" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC8LogLevelO">LogLevel</a>
+                    <a name="/s:14SwiftNetworker12NetworkCacheC5cacheSo7NSCacheCySo8NSStringCAA06CachedC8ResponseCGvp"></a>
+                    <a name="//apple_ref/swift/Property/cache" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker12NetworkCacheC5cacheSo7NSCacheCySo8NSStringCAA06CachedC8ResponseCGvp">cache</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -170,15 +165,14 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Enum representing the log level.</p>
+                        <p>Undocumented</p>
 
-                        <a href="../Classes/Logger/LogLevel.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">LogLevel</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">cache</span><span class="p">:</span> <span class="kt">NSCache</span><span class="o">&lt;</span><span class="kt">NSString</span><span class="p">,</span> <span class="kt"><a href="../Classes.html#/s:14SwiftNetworker21CachedNetworkResponseC">CachedNetworkResponse</a></span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -188,9 +182,9 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker6LoggerC8logLevel8isSilent0D6OutputA2C03LogE0O_SbySSctcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(logLevel:isSilent:logOutput:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC8logLevel8isSilent0D6OutputA2C03LogE0O_SbySSctcfc">init(logLevel:<wbr>isSilent:<wbr>logOutput:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker12NetworkCacheC5cache18expirationIntervalACSo7NSCacheCySo8NSStringCAA06CachedC8ResponseCG_Sdtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(cache:expirationInterval:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker12NetworkCacheC5cache18expirationIntervalACSo7NSCacheCySo8NSStringCAA06CachedC8ResponseCG_Sdtcfc">init(cache:<wbr>expirationInterval:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -198,14 +192,14 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a new logger instance.</p>
+                        <p>Initializes a new instance of <code>NetworkCache</code> with an optional cache object and expiration interval.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">logLevel</span><span class="p">:</span> <span class="kt"><a href="../Classes/Logger/LogLevel.html">LogLevel</a></span> <span class="o">=</span> <span class="o">.</span><span class="n">debug</span><span class="p">,</span> <span class="nv">isSilent</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">logOutput</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="o">=</span> <span class="p">{</span> <span class="nf">print</span><span class="p">(</span><span class="nv">$0</span><span class="p">)</span> <span class="p">})</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">cache</span><span class="p">:</span> <span class="kt">NSCache</span><span class="o">&lt;</span><span class="kt">NSString</span><span class="p">,</span> <span class="kt"><a href="../Classes.html#/s:14SwiftNetworker21CachedNetworkResponseC">CachedNetworkResponse</a></span><span class="o">&gt;</span> <span class="o">=</span> <span class="kt">NSCache</span><span class="o">&lt;</span><span class="kt">NSString</span><span class="p">,</span> <span class="kt"><a href="../Classes.html#/s:14SwiftNetworker21CachedNetworkResponseC">CachedNetworkResponse</a></span><span class="o">&gt;</span><span class="p">(),</span> <span class="nv">expirationInterval</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mi">3600</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -216,36 +210,24 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                             <tr>
                               <td>
                                 <code>
-                                <em>logLevel</em>
+                                <em>cache</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>The level of logging desired. Default is <code>.info</code>.</p>
+                                  <p>An optional <code>NSCache</code> object to use for caching network responses.</p>
                                 </div>
                               </td>
                             </tr>
                             <tr>
                               <td>
                                 <code>
-                                <em>isSilent</em>
+                                <em>expirationInterval</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>Boolean to determine if the logger should print. Default is <code>false</code>.</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>logOutput</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Closure to handle the log output. Default is <code>print</code>.</p>
+                                  <p>The time interval after which cached responses should expire.</p>
                                 </div>
                               </td>
                             </tr>
@@ -258,9 +240,9 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker6LoggerC10logRequestyy10Foundation10URLRequestVF"></a>
-                    <a name="//apple_ref/swift/Method/logRequest(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC10logRequestyy10Foundation10URLRequestVF">logRequest(_:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker12NetworkCacheC17getCachedResponse3forAA0cG0CSgSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/getCachedResponse(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker12NetworkCacheC17getCachedResponse3forAA0cG0CSgSS_tF">getCachedResponse(for:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -268,14 +250,14 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Logs a network request.</p>
+                        <p>Retrieves a cached response for a given network request URL string.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logRequest</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt">URLRequest</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getCachedResponse</span><span class="p">(</span><span class="k">for</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">?</span></code></pre>
 
                         </div>
                       </div>
@@ -286,17 +268,21 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                             <tr>
                               <td>
                                 <code>
-                                <em>request</em>
+                                <em>urlString</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>The URL request to be logged.</p>
+                                  <p>The URL string of the network request.</p>
                                 </div>
                               </td>
                             </tr>
                           </tbody>
                         </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A cached network response if available and not expired, or nil.</p>
                       </div>
                     </section>
                   </div>
@@ -304,9 +290,9 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker6LoggerC11logResponseyyAA07NetworkE0CF"></a>
-                    <a name="//apple_ref/swift/Method/logResponse(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC11logResponseyyAA07NetworkE0CF">logResponse(_:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker12NetworkCacheC13cacheResponse_3foryAA0cF0C_SStF"></a>
+                    <a name="//apple_ref/swift/Method/cacheResponse(_:for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker12NetworkCacheC13cacheResponse_3foryAA0cF0C_SStF">cacheResponse(_:<wbr>for:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -314,14 +300,14 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Logs a network response.</p>
+                        <p>Caches a network response for a given network request URL string.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">cacheResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">response</span><span class="p">:</span> <span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="k">for</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -337,79 +323,19 @@ call the appropriate logging methods to log requests, responses, and errors.</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>The network response to be logged.</p>
+                                  <p>The network response to cache.</p>
                                 </div>
                               </td>
                             </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14SwiftNetworker14LoggerProtocolP11logResponse_7messageySS_SStF"></a>
-                    <a name="//apple_ref/swift/Method/logResponse(_:message:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker14LoggerProtocolP11logResponse_7messageySS_SStF">logResponse(_:<wbr>message:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logResponse</span><span class="p">(</span><span class="n">_</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14SwiftNetworker6LoggerC8logErroryyAA07NetworkE0VF"></a>
-                    <a name="//apple_ref/swift/Method/logError(_:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker6LoggerC8logErroryyAA07NetworkE0VF">logError(_:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Logs a network error.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">logError</span><span class="p">(</span><span class="n">_</span> <span class="nv">error</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
                             <tr>
                               <td>
                                 <code>
-                                <em>error</em>
+                                <em>urlString</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>The network error to be logged.</p>
+                                  <p>The URL string of the network request associated with the response.</p>
                                 </div>
                               </td>
                             </tr>

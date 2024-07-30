@@ -17,7 +17,7 @@
     <a title="Networker Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">SwiftNetworker Docs</a> (76% documented)</p>
+        <p><a href="../index.html">SwiftNetworker Docs</a> (78% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -44,6 +44,9 @@
                 <a href="../Classes/AsyncNetworker.html">AsyncNetworker</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes.html#/s:14SwiftNetworker21CachedNetworkResponseC">CachedNetworkResponse</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/ErrorHandler.html">ErrorHandler</a>
               </li>
               <li class="nav-group-task">
@@ -51,6 +54,12 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Logger/LogLevel.html">– LogLevel</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkCache.html">NetworkCache</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/NetworkResponse.html">NetworkResponse</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Classes/Networker.html">Networker</a>
@@ -81,7 +90,16 @@
                 <a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Protocols/NetworkerProtocol.html">NetworkerProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/RequestInterceptorProtocol.html">RequestInterceptorProtocol</a>
               </li>
             </ul>
           </li>
@@ -93,9 +111,6 @@
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/NetworkRequest.html">NetworkRequest</a>
-              </li>
-              <li class="nav-group-task">
-                <a href="../Structs/NetworkResponse.html">NetworkResponse</a>
               </li>
               <li class="nav-group-task">
                 <a href="../Structs/Response.html">Response</a>
@@ -119,15 +134,16 @@
 <h2 id='overview' class='heading'>Overview</h2>
 
 <p>The <code>Networker</code> class provides a comprehensive solution for performing network operations such as simple requests, requests with decodable responses,
-uploads, and downloads. It conforms to the <code><a href="../Protocols/NetworkerProtocol.html">NetworkerProtocol</a></code> and includes methods for managing network tasks, handling responses, and logging activities.
-The class ensures that new requests can be locked and unlocked, providing a mechanism to control network traffic.</p>
+uploads, and downloads. It conforms to the <code><a href="../Protocols/NetworkerProtocol.html">NetworkerProtocol</a></code> and includes methods for managing network tasks, handling responses, logging activities,
+and caching responses. The class ensures that new requests can be locked and unlocked, providing a mechanism to control network traffic.</p>
 
 <p>The <code>Networker</code> uses <code>URLSession</code> to manage network requests and relies on the <code><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></code> for error handling and <code><a href="../Classes/Logger.html">Logger</a></code> for logging requests
-and responses. This design allows for consistent and reusable network operations across different parts of an application.</p>
+and responses. This design allows for consistent and reusable network operations across different parts of an application. The caching functionality is
+provided by a component that conforms to the <code><a href="../Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a></code>.</p>
 <h2 id='usage' class='heading'>Usage</h2>
 
-<p>To use the <code>Networker</code>, either utilize the shared singleton instance or create a new instance. Configure it with custom error handler and logger if needed.
-Call the appropriate methods to perform network requests, upload data, or download files.</p>
+<p>To use the <code>Networker</code>, either utilize the shared singleton instance or create a new instance. Configure it with custom error handler, logger, request interceptors,
+and cache if needed. Call the appropriate methods to perform network requests, upload data, or download files.</p>
 <pre class="highlight swift"><code><span class="k">let</span> <span class="nv">networker</span> <span class="o">=</span> <span class="kt">Networker</span><span class="o">.</span><span class="n">shared</span>
 <span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">NetworkRequest</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://example.com"</span><span class="p">)</span><span class="o">!</span><span class="p">)</span>
 <span class="n">networker</span><span class="o">.</span><span class="nf">perform</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="p">{</span> <span class="n">result</span> <span class="k">in</span>
@@ -169,9 +185,9 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker0B0C12errorHandler6loggerAcA05ErrorD8Protocol_p_AA6LoggerCtcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(errorHandler:logger:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker0B0C12errorHandler6loggerAcA05ErrorD8Protocol_p_AA6LoggerCtcfc">init(errorHandler:<wbr>logger:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker0B0C12errorHandler6logger19requestInterceptors11allowsCache5cache10maxRetries012delayBetweenL010allowRetry10urlSessionAcA05ErrorD8Protocol_p_AA06LoggerT0_pSayAA018RequestInterceptorT0_pGSbAA07NetworkiT0_pSgSiSdSbSo12NSURLSessionCtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(errorHandler:logger:requestInterceptors:allowsCache:cache:maxRetries:delayBetweenRetries:allowRetry:urlSession:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker0B0C12errorHandler6logger19requestInterceptors11allowsCache5cache10maxRetries012delayBetweenL010allowRetry10urlSessionAcA05ErrorD8Protocol_p_AA06LoggerT0_pSayAA018RequestInterceptorT0_pGSbAA07NetworkiT0_pSgSiSdSbSo12NSURLSessionCtcfc">init(errorHandler:<wbr>logger:<wbr>requestInterceptors:<wbr>allowsCache:<wbr>cache:<wbr>maxRetries:<wbr>delayBetweenRetries:<wbr>allowRetry:<wbr>urlSession:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -186,7 +202,15 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">errorHandler</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/ErrorHandler.html">ErrorHandler</a></span><span class="p">(),</span> <span class="nv">logger</span><span class="p">:</span> <span class="kt"><a href="../Classes/Logger.html">Logger</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/Logger.html">Logger</a></span><span class="p">())</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">errorHandler</span><span class="p">:</span> <span class="kt"><a href="../Protocols/ErrorHandlerProtocol.html">ErrorHandlerProtocol</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/ErrorHandler.html">ErrorHandler</a></span><span class="p">(),</span>
+            <span class="nv">logger</span><span class="p">:</span> <span class="kt"><a href="../Protocols/LoggerProtocol.html">LoggerProtocol</a></span> <span class="o">=</span> <span class="kt"><a href="../Classes/Logger.html">Logger</a></span><span class="p">(),</span>
+            <span class="nv">requestInterceptors</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Protocols/RequestInterceptorProtocol.html">RequestInterceptorProtocol</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+            <span class="nv">allowsCache</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="nv">cache</span><span class="p">:</span> <span class="kt"><a href="../Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a></span><span class="p">?</span> <span class="o">=</span> <span class="kt"><a href="../Classes/NetworkCache.html">NetworkCache</a></span><span class="p">(),</span>
+            <span class="nv">maxRetries</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="nv">delayBetweenRetries</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">,</span>
+            <span class="nv">allowRetry</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">true</span><span class="p">,</span>
+            <span class="nv">urlSession</span><span class="p">:</span> <span class="kt">URLSession</span> <span class="o">=</span> <span class="kt">URLSession</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">))</span></code></pre>
 
                         </div>
                       </div>
@@ -215,6 +239,78 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                               <td>
                                 <div>
                                   <p>An instance of Logger for logging requests and responses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>requestInterceptors</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An array of <code><a href="../Protocols/RequestInterceptorProtocol.html">RequestInterceptorProtocol</a></code> for modifying requests.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowsCache</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A boolean indicating whether caching is enabled.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cache</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An instance of <code><a href="../Protocols/NetworkCacheProtocol.html">NetworkCacheProtocol</a></code> for caching responses.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>maxRetries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Maximum number of retry attempts.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>delayBetweenRetries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Delay between retry attempts.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>allowRetry</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Boolean indicating if retries are allowed.</p>
                                 </div>
                               </td>
                             </tr>
@@ -314,73 +410,6 @@ Call the appropriate methods to perform network requests, upload data, or downlo
             </div>
             <div class="task-group">
               <div class="task-name-container">
-                <a name="/Lock%20Management"></a>
-                <a name="//apple_ref/swift/Section/Lock Management" class="dashAnchor"></a>
-                <div class="section-name-container">
-                  <a class="section-name-link" href="#/Lock%20Management"></a>
-                  <h3 class="section-name"><span>Lock Management</span>
-</h3>
-                </div>
-              </div>
-              <ul>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14SwiftNetworker0B0C4lockyyF"></a>
-                    <a name="//apple_ref/swift/Method/lock()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker0B0C4lockyyF">lock()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Locks the Networker class to prevent new requests from being made.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">lock</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:14SwiftNetworker0B0C6unlockyyF"></a>
-                    <a name="//apple_ref/swift/Method/unlock()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker0B0C6unlockyyF">unlock()</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Unlocks the Networker class to allow new requests to be made.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">unlock</span><span class="p">()</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
                 <a name="/Simple%20Requests"></a>
                 <a name="//apple_ref/swift/Section/Simple Requests" class="dashAnchor"></a>
                 <div class="section-name-container">
@@ -393,9 +422,9 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker0B0C7perform_10completionyAA14NetworkRequestV_ys6ResultOyAA0E8ResponseVAA0E5ErrorVGctF"></a>
-                    <a name="//apple_ref/swift/Method/perform(_:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker0B0C7perform_10completionyAA14NetworkRequestV_ys6ResultOyAA0E8ResponseVAA0E5ErrorVGctF">perform(_:<wbr>completion:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker0B0C7perform_7retries10completionyAA14NetworkRequestV_Siys6ResultOyAA0F8ResponseCAA0F5ErrorVGctF"></a>
+                    <a name="//apple_ref/swift/Method/perform(_:retries:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker0B0C7perform_7retries10completionyAA14NetworkRequestV_Siys6ResultOyAA0F8ResponseCAA0F5ErrorVGctF">perform(_:<wbr>retries:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -410,7 +439,7 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">perform</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">perform</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -427,6 +456,18 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                               <td>
                                 <div>
                                   <p>The network request to be made.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The current retry attempt count.</p>
                                 </div>
                               </td>
                             </tr>
@@ -464,9 +505,9 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker0B0C7perform_13responseModel10completionyAA14NetworkRequestV_xmys6ResultOyAA8ResponseVyxGAA0G5ErrorVGctSeRzlF"></a>
-                    <a name="//apple_ref/swift/Method/perform(_:responseModel:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker0B0C7perform_13responseModel10completionyAA14NetworkRequestV_xmys6ResultOyAA8ResponseVyxGAA0G5ErrorVGctSeRzlF">perform(_:<wbr>responseModel:<wbr>completion:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker0B0C7perform_13responseModel7retries10completionyAA14NetworkRequestV_xmSiys6ResultOyAA8ResponseVyxGAA0H5ErrorVGctSeRzlF"></a>
+                    <a name="//apple_ref/swift/Method/perform(_:responseModel:retries:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker0B0C7perform_13responseModel7retries10completionyAA14NetworkRequestV_xmSiys6ResultOyAA8ResponseVyxGAA0H5ErrorVGctSeRzlF">perform(_:<wbr>responseModel:<wbr>retries:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -481,7 +522,7 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">perform</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">responseModel</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/Response.html">Response</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Decodable</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="n">perform</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">responseModel</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/Response.html">Response</a></span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span> <span class="p">:</span> <span class="kt">Decodable</span></code></pre>
 
                         </div>
                       </div>
@@ -510,6 +551,18 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                               <td>
                                 <div>
                                   <p>The type to decode the response into.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The current retry attempt count.</p>
                                 </div>
                               </td>
                             </tr>
@@ -547,9 +600,9 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker0B0C13performUpload_4data10completionyAA14NetworkRequestV_10Foundation4DataVys6ResultOyAA0G8ResponseVAA0G5ErrorVGctF"></a>
-                    <a name="//apple_ref/swift/Method/performUpload(_:data:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker0B0C13performUpload_4data10completionyAA14NetworkRequestV_10Foundation4DataVys6ResultOyAA0G8ResponseVAA0G5ErrorVGctF">performUpload(_:<wbr>data:<wbr>completion:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker0B0C13performUpload_4data7retries10completionyAA14NetworkRequestV_10Foundation4DataVSiys6ResultOyAA0H8ResponseCAA0H5ErrorVGctF"></a>
+                    <a name="//apple_ref/swift/Method/performUpload(_:data:retries:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker0B0C13performUpload_4data7retries10completionyAA14NetworkRequestV_10Foundation4DataVSiys6ResultOyAA0H8ResponseCAA0H5ErrorVGctF">performUpload(_:<wbr>data:<wbr>retries:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -564,7 +617,7 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">performUpload</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">performUpload</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt"><a href="../Classes/NetworkResponse.html">NetworkResponse</a></span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -593,6 +646,18 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                               <td>
                                 <div>
                                   <p>The data to be uploaded.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The current retry attempt count.</p>
                                 </div>
                               </td>
                             </tr>
@@ -630,9 +695,9 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:14SwiftNetworker0B0C15performDownload_10completionyAA14NetworkRequestV_ys6ResultOy10Foundation3URLVAA0F5ErrorVGctF"></a>
-                    <a name="//apple_ref/swift/Method/performDownload(_:completion:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:14SwiftNetworker0B0C15performDownload_10completionyAA14NetworkRequestV_ys6ResultOy10Foundation3URLVAA0F5ErrorVGctF">performDownload(_:<wbr>completion:<wbr>)</a>
+                    <a name="/s:14SwiftNetworker0B0C15performDownload_7retries10completionyAA14NetworkRequestV_Siys6ResultOy10Foundation3URLVAA0G5ErrorVGctF"></a>
+                    <a name="//apple_ref/swift/Method/performDownload(_:retries:completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:14SwiftNetworker0B0C15performDownload_7retries10completionyAA14NetworkRequestV_Siys6ResultOy10Foundation3URLVAA0G5ErrorVGctF">performDownload(_:<wbr>retries:<wbr>completion:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -647,7 +712,7 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">performDownload</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URL</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">performDownload</span><span class="p">(</span><span class="n">_</span> <span class="nv">request</span><span class="p">:</span> <span class="kt"><a href="../Structs/NetworkRequest.html">NetworkRequest</a></span><span class="p">,</span> <span class="nv">retries</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Result</span><span class="o">&lt;</span><span class="kt">URL</span><span class="p">,</span> <span class="kt"><a href="../Structs/NetworkError.html">NetworkError</a></span><span class="o">&gt;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -664,6 +729,18 @@ Call the appropriate methods to perform network requests, upload data, or downlo
                               <td>
                                 <div>
                                   <p>The download request to be made.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>retries</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The current retry attempt count.</p>
                                 </div>
                               </td>
                             </tr>
@@ -690,7 +767,7 @@ Call the appropriate methods to perform network requests, upload data, or downlo
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-29)</p>
+          <p>&copy; 2024 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2024-07-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.15.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

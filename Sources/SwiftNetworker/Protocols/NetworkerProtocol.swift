@@ -18,16 +18,16 @@ import Foundation
 ///
 /// ```swift
 /// class MyNetworker: NetworkerProtocol {
-///     func perform(_ request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
+///     func perform(_ request: NetworkRequest, retries: Int, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
 ///         // Implementation of the perform method
 ///     }
-///     func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
+///     func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, retries: Int, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
 ///         // Implementation of the perform method with decodable response
 ///     }
-///     func performUpload(_ request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
+///     func performUpload(_ request: NetworkRequest, data: Data, retries: Int, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
 ///         // Implementation of the performUpload method
 ///     }
-///     func performDownload(_ request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) {
+///     func performDownload(_ request: NetworkRequest, retries: Int, completion: @escaping (Result<URL, NetworkError>) -> Void) {
 ///         // Implementation of the performDownload method
 ///     }
 /// }
@@ -42,8 +42,9 @@ public protocol NetworkerProtocol {
     ///
     /// - Parameters:
     ///   - request: The network request to be made.
+    ///   - retries: The current retry attempt count.
     ///   - completion: A closure that handles the result of the request, containing either a `NetworkResponse` or a `NetworkError`.
-    func perform(_ request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void)
+    func perform(_ request: NetworkRequest, retries: Int, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void)
     
     /// Performs a network request and decodes the response into a specified model type with a completion handler.
     ///
@@ -52,8 +53,9 @@ public protocol NetworkerProtocol {
     /// - Parameters:
     ///   - request: The network request to be made.
     ///   - responseModel: The type to decode the response into.
+    ///   - retries: The current retry attempt count.
     ///   - completion: A closure that handles the result of the request, containing either a decoded response or a `NetworkError`.
-    func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, completion: @escaping (Result<Response<T>, NetworkError>) -> Void)
+    func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, retries: Int, completion: @escaping (Result<Response<T>, NetworkError>) -> Void)
     
     /// Performs an upload request with a completion handler.
     ///
@@ -62,8 +64,9 @@ public protocol NetworkerProtocol {
     /// - Parameters:
     ///   - request: The upload request to be made.
     ///   - data: The data to be uploaded.
+    ///   - retries: The current retry attempt count.
     ///   - completion: A closure that handles the result of the upload, containing either a `NetworkResponse` or a `NetworkError`.
-    func performUpload(_ request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void)
+    func performUpload(_ request: NetworkRequest, data: Data, retries: Int, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void)
     
     /// Performs a download request with a completion handler.
     ///
@@ -71,6 +74,7 @@ public protocol NetworkerProtocol {
     ///
     /// - Parameters:
     ///   - request: The download request to be made.
+    ///   - retries: The current retry attempt count.
     ///   - completion: A closure that handles the result of the download, containing either a file URL or a `NetworkError`.
-    func performDownload(_ request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void)
+    func performDownload(_ request: NetworkRequest, retries: Int, completion: @escaping (Result<URL, NetworkError>) -> Void)
 }

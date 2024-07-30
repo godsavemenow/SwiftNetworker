@@ -32,6 +32,9 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     private let requestInterceptors: [RequestInterceptorProtocol]
     private let allowsCache: Bool
     private let cache: NetworkCacheProtocol?
+    private let maxRetries: Int
+    private let delayBetweenRetries: TimeInterval
+    private let allowRetry: Bool
 
     /// Initializes the AsyncNetworker with optional error handler, logger, request interceptors, and cache option.
     /// - Parameters:
@@ -40,26 +43,36 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     ///   - requestInterceptors: An array of `RequestInterceptorProtocol` for modifying requests.
     ///   - allowsCache: A boolean indicating whether caching is enabled.
     ///   - cache: An instance of `NetworkCacheProtocol` for caching responses.
+    ///   - maxRetries: Maximum number of retry attempts.
+    ///   - delayBetweenRetries: Delay between retry attempts.
+    ///   - allowRetry: Boolean indicating if retries are allowed.
     public init(
         errorHandler: ErrorHandlerProtocol = ErrorHandler(),
         logger: LoggerProtocol = Logger(),
         requestInterceptors: [RequestInterceptorProtocol] = [],
         allowsCache: Bool = true,
-        cache: NetworkCacheProtocol? = NetworkCache()
+        cache: NetworkCacheProtocol? = NetworkCache(),
+        maxRetries: Int = 3,
+        delayBetweenRetries: TimeInterval = 2.0,
+        allowRetry: Bool = true
     ) {
         self.errorHandler = errorHandler
         self.logger = logger
         self.requestInterceptors = requestInterceptors
         self.allowsCache = allowsCache
         self.cache = cache
+        self.maxRetries = maxRetries
+        self.delayBetweenRetries = delayBetweenRetries
+        self.allowRetry = allowRetry
     }
     
     // MARK: - Simple Requests
     
     /// Performs a simple network request asynchronously.
     /// - Parameter request: The network request to be made.
+    /// - Parameter retries: The current retry attempt count.
     /// - Returns: A result containing either the network response or a network error.
-    public func performAsync(_ request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
+    public func performAsync(_ request: NetworkRequest, retries: Int = 0) async -> Result<NetworkResponse, NetworkError> {
         if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString) {
             logger.logResponse("Success", message: "Cached Response")
             logger.logResponse(cachedResponse)
@@ -70,6 +83,12 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
         if allowsCache, case .success(let response) = result, let urlString = request.url?.absoluteString {
             cache?.cacheResponse(response, for: urlString)
         }
+        
+        if allowRetry, case .failure = result, retries < maxRetries {
+            try? await Task.sleep(nanoseconds: UInt64(delayBetweenRetries * 1_000_000_000))
+            return await performAsync(request, retries: retries + 1)
+        }
+        
         return result
     }
     
@@ -85,9 +104,10 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Parameters:
     ///   - request: The network request to be made.
     ///   - responseModel: The type to decode the response into.
+    ///   - retries: The current retry attempt count.
     /// - Returns: A result containing either the decoded response or a network error.
-    public func performAsync<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type) async -> Result<Response<T>, NetworkError> {
-        let result = await performAsync(request)
+    public func performAsync<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, retries: Int = 0) async -> Result<Response<T>, NetworkError> {
+        let result = await performAsync(request, retries: retries)
         switch result {
         case .success(let response):
             return Commons.decodeResponse(response, to: responseModel, logger: logger, errorHandler: errorHandler)
@@ -102,9 +122,16 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Parameters:
     ///   - request: The upload request to be made.
     ///   - data: The data to be uploaded.
+    ///   - retries: The current retry attempt count.
     /// - Returns: A result containing either the network response or a network error.
-    public func performUploadAsync(_ request: NetworkRequest, data: Data) async -> Result<NetworkResponse, NetworkError> {
+    public func performUploadAsync(_ request: NetworkRequest, data: Data, retries: Int = 0) async -> Result<NetworkResponse, NetworkError> {
         let result = await executeUploadAsync(request: request, data: data)
+        
+        if allowRetry, case .failure = result, retries < maxRetries {
+            try? await Task.sleep(nanoseconds: UInt64(delayBetweenRetries * 1_000_000_000))
+            return await performUploadAsync(request, data: data, retries: retries + 1)
+        }
+        
         return result
     }
     
@@ -113,9 +140,26 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// Performs a download request asynchronously.
     /// - Parameters:
     ///   - request: The download request to be made.
+    ///   - retries: The current retry attempt count.
     /// - Returns: A result containing either the file URL or a network error.
-    public func performDownloadAsync(_ request: NetworkRequest) async -> Result<URL, NetworkError> {
-        await executeDownloadAsync(request: request)
+    public func performDownloadAsync(_ request: NetworkRequest, retries: Int = 0) async -> Result<URL, NetworkError> {
+        if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString) {
+            logger.logResponse("Success", message: "Cached Response")
+            return .success(cachedResponse.URLResponse.url!)
+        }
+
+        let result = await executeDownloadAsync(request: request)
+        if allowsCache, case .success(let url) = result, let urlString = request.url?.absoluteString {
+            let networkResponse = NetworkResponse(data: Data(), URLResponse: URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil))
+            cache?.cacheResponse(networkResponse, for: urlString)
+        }
+        
+        if allowRetry, case .failure = result, retries < maxRetries {
+            try? await Task.sleep(nanoseconds: UInt64(delayBetweenRetries * 1_000_000_000))
+            return await performDownloadAsync(request, retries: retries + 1)
+        }
+        
+        return result
     }
     
     // MARK: - Private Methods

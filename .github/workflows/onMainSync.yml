@@ -20,7 +20,7 @@ jobs:
         run: swift build -v
 
       - name: Run tests with coverage
-        run: xcodebuild test -scheme SwiftNetworkerPlan -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -testPlan SwiftNetworker/Tests/SwiftNetworkerTests/SwiftNetworker.xctestplan -resultBundlePath TestResults
+        run: xcodebuild test -scheme SwiftNetworker -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -testPlan SwiftNetworkerPlan -resultBundlePath TestResults
 
       - name: Verify TestResults
         run: ls -alh TestResults.xcresult

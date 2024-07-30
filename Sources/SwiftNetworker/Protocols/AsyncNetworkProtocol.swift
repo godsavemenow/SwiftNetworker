@@ -30,9 +30,11 @@ public protocol AsyncNetworkerProtocol {
     ///
     /// This method sends a network request and returns the result asynchronously.
     ///
-    /// - Parameter request: The network request to be made.
+    /// - Parameters:
+    ///   - request: The network request to be made.
+    ///   - retries: The current retry attempt count.
     /// - Returns: A result containing either the network response or a network error.
-    func performAsync(_ request: NetworkRequest) async -> Result<NetworkResponse, NetworkError>
+    func performAsync(_ request: NetworkRequest, retries: Int) async -> Result<NetworkResponse, NetworkError>
     
     /// Performs a network request and decodes the response into a specified model type asynchronously.
     ///
@@ -41,8 +43,9 @@ public protocol AsyncNetworkerProtocol {
     /// - Parameters:
     ///   - request: The network request to be made.
     ///   - responseModel: The type to decode the response into.
+    ///   - retries: The current retry attempt count.
     /// - Returns: A result containing either the decoded response or a network error.
-    func performAsync<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type) async -> Result<Response<T>, NetworkError>
+    func performAsync<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, retries: Int) async -> Result<Response<T>, NetworkError>
     
     /// Performs an upload request asynchronously.
     ///
@@ -51,14 +54,17 @@ public protocol AsyncNetworkerProtocol {
     /// - Parameters:
     ///   - request: The upload request to be made.
     ///   - data: The data to be uploaded.
+    ///   - retries: The current retry attempt count.
     /// - Returns: A result containing either the network response or a network error.
-    func performUploadAsync(_ request: NetworkRequest, data: Data) async -> Result<NetworkResponse, NetworkError>
+    func performUploadAsync(_ request: NetworkRequest, data: Data, retries: Int) async -> Result<NetworkResponse, NetworkError>
     
     /// Performs a download request asynchronously.
     ///
     /// This method sends a network request to download content from a server and returns the result asynchronously.
     ///
-    /// - Parameter request: The download request to be made.
+    /// - Parameters:
+    ///   - request: The download request to be made.
+    ///   - retries: The current retry attempt count.
     /// - Returns: A result containing either the file URL or a network error.
-    func performDownloadAsync(_ request: NetworkRequest) async -> Result<URL, NetworkError>
+    func performDownloadAsync(_ request: NetworkRequest, retries: Int) async -> Result<URL, NetworkError>
 }

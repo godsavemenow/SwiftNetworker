@@ -4,15 +4,16 @@ import Foundation
 ///
 /// ## Overview
 /// The `Networker` class provides a comprehensive solution for performing network operations such as simple requests, requests with decodable responses,
-/// uploads, and downloads. It conforms to the `NetworkerProtocol` and includes methods for managing network tasks, handling responses, and logging activities.
-/// The class ensures that new requests can be locked and unlocked, providing a mechanism to control network traffic.
+/// uploads, and downloads. It conforms to the `NetworkerProtocol` and includes methods for managing network tasks, handling responses, logging activities,
+/// and caching responses. The class ensures that new requests can be locked and unlocked, providing a mechanism to control network traffic.
 ///
 /// The `Networker` uses `URLSession` to manage network requests and relies on the `ErrorHandlerProtocol` for error handling and `Logger` for logging requests
-/// and responses. This design allows for consistent and reusable network operations across different parts of an application.
+/// and responses. This design allows for consistent and reusable network operations across different parts of an application. The caching functionality is
+/// provided by a component that conforms to the `NetworkCacheProtocol`.
 ///
 /// ## Usage
-/// To use the `Networker`, either utilize the shared singleton instance or create a new instance. Configure it with custom error handler and logger if needed.
-/// Call the appropriate methods to perform network requests, upload data, or download files.
+/// To use the `Networker`, either utilize the shared singleton instance or create a new instance. Configure it with custom error handler, logger, request interceptors,
+/// and cache if needed. Call the appropriate methods to perform network requests, upload data, or download files.
 ///
 /// ```swift
 /// let networker = Networker.shared
@@ -27,9 +28,14 @@ public class Networker: NetworkerProtocol {
     private let logger: LoggerProtocol
     private var tasks: [UUID: URLSessionTask] = [:]
     private let queue = DispatchQueue(label: "com.networker.taskQueue")
-    private let lockSemaphore = DispatchSemaphore(value: 1)
     private let requestInterceptors: [RequestInterceptorProtocol]
-
+    private let allowsCache: Bool
+    private let cache: NetworkCacheProtocol?
+    private let maxRetries: Int
+    private let delayBetweenRetries: TimeInterval
+    private let allowRetry: Bool
+    private let urlSession: URLSession
+    
     /// Singleton instance
     public static let shared = Networker()
     
@@ -38,12 +44,29 @@ public class Networker: NetworkerProtocol {
     ///   - errorHandler: An instance of ErrorHandler for handling errors.
     ///   - logger: An instance of Logger for logging requests and responses.
     ///   - requestInterceptors: An array of `RequestInterceptorProtocol` for modifying requests.
+    ///   - allowsCache: A boolean indicating whether caching is enabled.
+    ///   - cache: An instance of `NetworkCacheProtocol` for caching responses.
+    ///   - maxRetries: Maximum number of retry attempts.
+    ///   - delayBetweenRetries: Delay between retry attempts.
+    ///   - allowRetry: Boolean indicating if retries are allowed.
     public init(errorHandler: ErrorHandlerProtocol = ErrorHandler(),
                 logger: LoggerProtocol = Logger(),
-                requestInterceptors: [RequestInterceptorProtocol] = []) {
+                requestInterceptors: [RequestInterceptorProtocol] = [],
+                allowsCache: Bool = true,
+                cache: NetworkCacheProtocol? = NetworkCache(),
+                maxRetries: Int = 3,
+                delayBetweenRetries: TimeInterval = 2.0,
+                allowRetry: Bool = true,
+                urlSession: URLSession = URLSession(configuration: .default)) {
         self.errorHandler = errorHandler
         self.logger = logger
         self.requestInterceptors = requestInterceptors
+        self.allowsCache = allowsCache
+        self.cache = cache
+        self.maxRetries = maxRetries
+        self.delayBetweenRetries = delayBetweenRetries
+        self.allowRetry = allowRetry
+        self.urlSession = urlSession
     }
     
     // MARK: - Task Management
@@ -67,34 +90,50 @@ public class Networker: NetworkerProtocol {
         }
     }
     
-    // MARK: - Lock Management
-    
-    /// Locks the Networker class to prevent new requests from being made.
-    public func lock() {
-        lockSemaphore.wait()
-    }
-    
-    /// Unlocks the Networker class to allow new requests to be made.
-    public func unlock() {
-        lockSemaphore.signal()
-    }
-    
     // MARK: - Simple Requests
     
     /// Performs a simple network request with a completion handler.
     /// - Parameters:
     ///   - request: The network request to be made.
+    ///   - retries: The current retry attempt count.
     ///   - completion: A closure that handles the result of the request.
-    public func perform(_ request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
-        lockSemaphore.wait()
+    public func perform(_ request: NetworkRequest, retries: Int = 0, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
         
+        if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString) {
+            completion(.success(cachedResponse))
+            logger.logResponse("Success", message: "Cached Response")
+            logger.logResponse(cachedResponse)
+            return
+        }
+        
+        let startTime = Date()
         let taskId = UUID()
         let task = execute(request: request) { [weak self] result in
-            self?.queue.sync {
-                _ = self?.tasks.removeValue(forKey: taskId)
+            guard let self = self else { return }
+            self.queue.sync {
+                _ = self.tasks.removeValue(forKey: taskId)
             }
-            completion(result)
-            self?.lockSemaphore.signal()
+            
+            let endTime = Date()
+            let duration = endTime.timeIntervalSince(startTime)
+            logger.logResponse("Time Report", message: "Request completed in \(duration) seconds.")
+
+            switch result {
+            case .success(let response):
+                if self.allowsCache, let urlString = request.url?.absoluteString {
+                    self.cache?.cacheResponse(response, for: urlString)
+                }
+                completion(.success(response))
+                
+            case .failure(let error):
+                if self.allowRetry, retries < self.maxRetries {
+                    DispatchQueue.global().asyncAfter(deadline: .now() + self.delayBetweenRetries) {
+                        self.perform(request, retries: retries + 1, completion: completion)
+                    }
+                } else {
+                    completion(.failure(error))
+                }
+            }
         }
         
         guard let task = task else {
@@ -113,14 +152,21 @@ public class Networker: NetworkerProtocol {
     /// - Parameters:
     ///   - request: The network request to be made.
     ///   - responseModel: The type to decode the response into.
+    ///   - retries: The current retry attempt count.
     ///   - completion: A closure that handles the result of the request.
-    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
-        perform(request) { result in
+    public func perform<T: Decodable>(_ request: NetworkRequest, responseModel: T.Type, retries: Int = 0, completion: @escaping (Result<Response<T>, NetworkError>) -> Void) {
+        perform(request, retries: retries) { result in
             switch result {
             case .success(let response):
                 completion(self.decodeResponse(response, to: responseModel))
             case .failure(let error):
-                completion(.failure(error))
+                if self.allowRetry, retries < self.maxRetries {
+                    DispatchQueue.global().asyncAfter(deadline: .now() + self.delayBetweenRetries) {
+                        self.perform(request, responseModel: responseModel, retries: retries + 1, completion: completion)
+                    }
+                } else {
+                    completion(.failure(error))
+                }
             }
         }
     }
@@ -131,18 +177,37 @@ public class Networker: NetworkerProtocol {
     /// - Parameters:
     ///   - request: The upload request to be made.
     ///   - data: The data to be uploaded.
+    ///   - retries: The current retry attempt count.
     ///   - completion: A closure that handles the result of the request.
-    public func performUpload(_ request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
-        lockSemaphore.wait()
+    public func performUpload(_ request: NetworkRequest, data: Data, retries: Int = 0, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) {
         
+        let startTime = Date()
         let taskId = UUID()
         let task = executeUpload(request: request, data: data) { [weak self] result in
-            self?.queue.sync {
-                _ = self?.tasks.removeValue(forKey: taskId)
+            guard let self = self else { return }
+            self.queue.sync {
+                _ = self.tasks.removeValue(forKey: taskId)
             }
-            completion(result)
-            self?.lockSemaphore.signal()
+            
+            let endTime = Date()
+            let duration = endTime.timeIntervalSince(startTime)
+            logger.logResponse("Time Report", message: "Upload completed in \(duration) seconds.")
+
+            switch result {
+            case .success(let response):
+                completion(.success(response))
+                
+            case .failure(let error):
+                if self.allowRetry, retries < self.maxRetries {
+                    DispatchQueue.global().asyncAfter(deadline: .now() + self.delayBetweenRetries) {
+                        self.performUpload(request, data: data, retries: retries + 1, completion: completion)
+                    }
+                } else {
+                    completion(.failure(error))
+                }
+            }
         }
+        
         guard let task = task else {
             return
         }
@@ -158,17 +223,45 @@ public class Networker: NetworkerProtocol {
     /// Performs a download request with a completion handler.
     /// - Parameters:
     ///   - request: The download request to be made.
+    ///   - retries: The current retry attempt count.
     ///   - completion: A closure that handles the result of the request.
-    public func performDownload(_ request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) {
-        lockSemaphore.wait()
+    public func performDownload(_ request: NetworkRequest, retries: Int = 0, completion: @escaping (Result<URL, NetworkError>) -> Void) {
         
+        if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString)?.URLResponse.url {
+            completion(.success(cachedResponse))
+            logger.logResponse("Success", message: "Cached Response")
+            return
+        }
+        
+        let startTime = Date()
         let taskId = UUID()
         let task = executeDownload(request: request) { [weak self] result in
-            self?.queue.sync {
-                _ = self?.tasks.removeValue(forKey: taskId)
+            guard let self = self else { return }
+            self.queue.sync {
+                _ = self.tasks.removeValue(forKey: taskId)
             }
-            completion(result)
-            self?.lockSemaphore.signal()
+            
+            let endTime = Date()
+            let duration = endTime.timeIntervalSince(startTime)
+            logger.logResponse("Time Report", message: "Download completed in \(duration) seconds.")
+
+            switch result {
+            case .success(let url):
+                if self.allowsCache, let urlString = request.url?.absoluteString {
+                    let networkResponse = NetworkResponse(data: Data(), URLResponse: URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil))
+                    self.cache?.cacheResponse(networkResponse, for: urlString)
+                }
+                completion(.success(url))
+                
+            case .failure(let error):
+                if self.allowRetry, retries < self.maxRetries {
+                    DispatchQueue.global().asyncAfter(deadline: .now() + self.delayBetweenRetries) {
+                        self.performDownload(request, retries: retries + 1, completion: completion)
+                    }
+                } else {
+                    completion(.failure(error))
+                }
+            }
         }
         
         guard let task = task else {
@@ -198,8 +291,9 @@ public class Networker: NetworkerProtocol {
         }
         logger.logRequest(urlRequest)
         intercept(&urlRequest)
-        let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, error in
-            self?.handleResponse(data: data, response: response, error: error, completion: completion)
+        let task = urlSession.dataTask(with: urlRequest) { [weak self] data, response, error in
+            guard let self = self else { return }
+            self.handleResponse(data: data, response: response, error: error, completion: completion)
         }
         
         return task
@@ -227,8 +321,9 @@ public class Networker: NetworkerProtocol {
         logger.logRequest(urlRequest)
         intercept(&urlRequest)
         
-        let task = URLSession.shared.uploadTask(with: urlRequest, from: data) { [weak self] data, response, error in
-            self?.handleResponse(data: data, response: response, error: error, completion: completion)
+        let task = urlSession.uploadTask(with: urlRequest, from: data) { [weak self] data, response, error in
+            guard let self = self else { return }
+            self.handleResponse(data: data, response: response, error: error, completion: completion)
         }
         
         return task
@@ -249,8 +344,9 @@ public class Networker: NetworkerProtocol {
         logger.logRequest(urlRequest)
         
         intercept(&urlRequest)
-        let task = URLSession.shared.downloadTask(with: urlRequest) { [weak self] url, response, error in
-            self?.handleDownloadResponse(url: url, response: response, error: error, completion: completion)
+        let task = urlSession.downloadTask(with: urlRequest) { [weak self] url, response, error in
+            guard let self = self else { return }
+            self.handleDownloadResponse(url: url, response: response, error: error, completion: completion)
         }
         
         return task

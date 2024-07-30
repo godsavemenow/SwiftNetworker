@@ -25,39 +25,20 @@ jobs:
       - name: Verify TestResults
         run: ls -alh TestResults.xcresult
 
-      - name: Install llvm-cov
-        run: |
-          brew install llvm
-          export PATH="/usr/local/opt/llvm/bin:$PATH"
-
-      - name: Generate code coverage report
+      - name: Generate code coverage report in XML
         run: |
           mkdir -p coverage
-          xcrun llvm-profdata merge -sparse TestResults.xcresult/coverage.profdata -o coverage/coverage.profdata
-          xcrun llvm-cov show \
-            .build/debug/SwiftNetworkerPackageTests.xctest \
-            -instr-profile=coverage/coverage.profdata \
-            -ignore-filename-regex="(Tests/.*|README\\.md)" \
-            -format=html \
-            -output-dir=coverage
-
-      - name: Generate coverage summary
-        run: |
-          xcrun llvm-cov export \
-            .build/debug/SwiftNetworkerPackageTests.xctest \
-            -instr-profile=coverage/coverage.profdata \
-            -ignore-filename-regex="(Tests/.*|README\\.md)" \
-            -format=json \
-            > coverage/coverage.json
+          xcrun xccov view --report --xml TestResults.xcresult > coverage/coverage.xml
 
       - name: Verify Coverage Report
-        run: cat coverage/coverage.json
+        run: cat coverage/coverage.xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          file: ./coverage/coverage.json
+          file: ./coverage/coverage.xml
           flags: unittests
           name: codecov-report
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
+

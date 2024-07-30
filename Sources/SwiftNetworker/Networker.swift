@@ -21,14 +21,14 @@ import Foundation
 ///     // Handle result
 /// }
 /// ```
-///
 public class Networker: NetworkerProtocol {
     
     private let errorHandler: ErrorHandlerProtocol
-    private let logger: Logger
+    private let logger: LoggerProtocol
     private var tasks: [UUID: URLSessionTask] = [:]
     private let queue = DispatchQueue(label: "com.networker.taskQueue")
     private let lockSemaphore = DispatchSemaphore(value: 1)
+    private let requestInterceptors: [RequestInterceptorProtocol]
 
     /// Singleton instance
     public static let shared = Networker()
@@ -37,9 +37,13 @@ public class Networker: NetworkerProtocol {
     /// - Parameters:
     ///   - errorHandler: An instance of ErrorHandler for handling errors.
     ///   - logger: An instance of Logger for logging requests and responses.
-    public init(errorHandler: ErrorHandlerProtocol = ErrorHandler(), logger: Logger = Logger()) {
+    ///   - requestInterceptors: An array of `RequestInterceptorProtocol` for modifying requests.
+    public init(errorHandler: ErrorHandlerProtocol = ErrorHandler(),
+                logger: LoggerProtocol = Logger(),
+                requestInterceptors: [RequestInterceptorProtocol] = []) {
         self.errorHandler = errorHandler
         self.logger = logger
+        self.requestInterceptors = requestInterceptors
     }
     
     // MARK: - Task Management
@@ -185,7 +189,7 @@ public class Networker: NetworkerProtocol {
     ///   - completion: A closure that handles the result of the request.
     /// - Returns: The URLSessionDataTask associated with the request.
     private func execute(request: NetworkRequest, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) -> URLSessionDataTask? {
-        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+        guard var urlRequest = Commons.makeURLRequest(from: request) else {
             let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
             logger.logError(error)
             
@@ -193,12 +197,18 @@ public class Networker: NetworkerProtocol {
             return nil
         }
         logger.logRequest(urlRequest)
-        
+        intercept(&urlRequest)
         let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, error in
             self?.handleResponse(data: data, response: response, error: error, completion: completion)
         }
         
         return task
+    }
+    
+    /// Applies all interceptors to the given URLRequest.
+    /// - Parameter request: The URLRequest to be modified.
+    private func intercept(_ request: inout URLRequest) {
+        requestInterceptors.forEach { $0.intercept(&request) }
     }
     
     /// Executes an upload request with a completion handler.
@@ -208,13 +218,14 @@ public class Networker: NetworkerProtocol {
     ///   - completion: A closure that handles the result of the request.
     /// - Returns: The URLSessionUploadTask associated with the request.
     private func executeUpload(request: NetworkRequest, data: Data, completion: @escaping (Result<NetworkResponse, NetworkError>) -> Void) -> URLSessionUploadTask? {
-        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+        guard var urlRequest = Commons.makeURLRequest(from: request) else {
             let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
             logger.logError(error)
             completion(.failure(error))
             return nil
         }
         logger.logRequest(urlRequest)
+        intercept(&urlRequest)
         
         let task = URLSession.shared.uploadTask(with: urlRequest, from: data) { [weak self] data, response, error in
             self?.handleResponse(data: data, response: response, error: error, completion: completion)
@@ -229,7 +240,7 @@ public class Networker: NetworkerProtocol {
     ///   - completion: A closure that handles the result of the request.
     /// - Returns: The URLSessionDownloadTask associated with the request.
     private func executeDownload(request: NetworkRequest, completion: @escaping (Result<URL, NetworkError>) -> Void) -> URLSessionDownloadTask? {
-        guard let urlRequest = Commons.makeURLRequest(from: request) else {
+        guard var urlRequest = Commons.makeURLRequest(from: request) else {
             let error = NetworkError(errorCase: .invalidURL, apiErrorMessage: nil)
             logger.logError(error)
             completion(.failure(error))
@@ -237,6 +248,7 @@ public class Networker: NetworkerProtocol {
         }
         logger.logRequest(urlRequest)
         
+        intercept(&urlRequest)
         let task = URLSession.shared.downloadTask(with: urlRequest) { [weak self] url, response, error in
             self?.handleDownloadResponse(url: url, response: response, error: error, completion: completion)
         }

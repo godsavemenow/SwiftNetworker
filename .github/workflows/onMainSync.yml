@@ -2,55 +2,55 @@ name: onMainSync
 
 on:
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: ["main", "dev"]
 
 jobs:
   build:
-
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: '14.3.1'
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '14.3.1'
 
-    - name: Build
-      run: swift build -v
+      - name: Build
+        run: swift build -v
 
-    - name: Run tests
-      run: xcodebuild test -scheme SwiftNetworker -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -resultBundlePath TestResults
+      - name: Run tests
+        run: xcodebuild test -scheme SwiftNetworker -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -resultBundlePath TestResults
 
-    - name: Verify TestResults
-      run: ls -alh TestResults.xcresult
+      - name: Verify TestResults
+        run: ls -alh TestResults.xcresult
 
-    - name: Generate code coverage report
-      run: |
-        mkdir -p coverage
-        xcrun xccov view --report --json TestResults.xcresult > coverage/coverage.json
+      - name: Install Slather
+        run: gem install slather
 
-    - name: Verify Coverage Report
-      run: cat coverage/coverage.json
+      - name: Generate code coverage report with Slather
+        run: slather coverage --output-directory coverage --scheme SwiftNetworker SwiftNetworker.xcodeproj
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage/coverage.json
-        flags: unittests
-        name: codecov-report
-        fail_ci_if_error: true
-        token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Verify Coverage Report
+        run: cat coverage/cobertura.xml
 
-    - name: Install jazzy
-      run: gem install jazzy
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/cobertura.xml
+          flags: unittests
+          name: codecov-report
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
 
-    - name: Generate Documentation
-      run: jazzy --module SwiftNetworker --output docs
+      - name: Install jazzy
+        run: gem install jazzy
 
-    - name: Deploy Documentation to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GH_TOKEN }}
-        publish_dir: ./docs
+      - name: Generate Documentation
+        run: jazzy --module SwiftNetworker --output docs
+
+      - name: Deploy Documentation to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./docs

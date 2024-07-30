@@ -1,0 +1,11 @@
+coverage_service: cobertura
+xcodeproj: SwiftNetworker.xcodeproj
+scheme: SwiftNetworker
+output_directory: slather-report
+ignore:
+  - "*.md"
+  - "Package.swift"
+  - ".git**"
+  - "Tests/**/*"
+  - "Sources/SwiftNetworker/Protocols/**/*"
+  - "Sources/SwiftNetworker/Model/**/*"

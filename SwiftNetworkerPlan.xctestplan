@@ -1,15 +1,15 @@
 {
   "configurations" : [
     {
-      "id" : "4078C5E7-88F1-442C-BE40-1086D434FF1A",
-      "name" : "Test Scheme Action",
+      "id" : "7D05FA25-09EB-46DF-BA4A-0002E6DA36BC",
+      "name" : "Configuration 1",
       "options" : {
 
       }
     }
   ],
   "defaultOptions" : {
-    "testExecutionOrdering" : "random"
+
   },
   "testTargets" : [
     {

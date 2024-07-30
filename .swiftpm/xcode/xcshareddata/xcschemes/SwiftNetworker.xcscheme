@@ -43,7 +43,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Tests/SwiftNetworkerTests/SwiftNetworker.xctestplan"
+            reference = "container:SwiftNetworkerPlan.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

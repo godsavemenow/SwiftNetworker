@@ -99,6 +99,8 @@ public class Networker: NetworkerProtocol {
         
         if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString) {
             completion(.success(cachedResponse))
+            logger.logResponse("Success", message: "Cached Response")
+            logger.logResponse(cachedResponse)
             lockSemaphore.signal()
             return
         }

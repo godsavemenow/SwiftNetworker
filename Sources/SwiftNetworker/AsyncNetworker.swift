@@ -61,6 +61,8 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Returns: A result containing either the network response or a network error.
     public func performAsync(_ request: NetworkRequest) async -> Result<NetworkResponse, NetworkError> {
         if allowsCache, let urlString = request.url?.absoluteString, let cachedResponse = cache?.getCachedResponse(for: urlString) {
+            logger.logResponse("Success", message: "Cached Response")
+            logger.logResponse(cachedResponse)
             return .success(cachedResponse)
         }
         
@@ -103,9 +105,6 @@ public class AsyncNetworker: AsyncNetworkerProtocol {
     /// - Returns: A result containing either the network response or a network error.
     public func performUploadAsync(_ request: NetworkRequest, data: Data) async -> Result<NetworkResponse, NetworkError> {
         let result = await executeUploadAsync(request: request, data: data)
-        if allowsCache, case .success(let response) = result, let urlString = request.url?.absoluteString {
-            cache?.cacheResponse(response, for: urlString)
-        }
         return result
     }
     

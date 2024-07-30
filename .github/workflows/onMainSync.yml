@@ -20,23 +20,23 @@ jobs:
         run: swift build -v
 
       - name: Run tests with coverage
-        run: xcodebuild test -scheme SwiftNetworker -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -testPlan SwiftNetworkerPlan -resultBundlePath TestResults
+        run: xcodebuild test -scheme SwiftNetworkerPlan -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -testPlan SwiftNetworker/Tests/SwiftNetworkerTests/SwiftNetworker.xctestplan -resultBundlePath TestResults
 
       - name: Verify TestResults
         run: ls -alh TestResults.xcresult
 
-      - name: Generate code coverage report in XML
+      - name: Generate code coverage report
         run: |
           mkdir -p coverage
-          xcrun xccov view --report --xml TestResults.xcresult > coverage/coverage.xml
+          xcrun xccov view --report --json TestResults.xcresult > coverage/coverage.json
 
       - name: Verify Coverage Report
-        run: cat coverage/coverage.xml
+        run: cat coverage/coverage.json
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          file: ./coverage/coverage.xml
+          file: ./coverage/coverage.json
           flags: unittests
           name: codecov-report
           fail_ci_if_error: true

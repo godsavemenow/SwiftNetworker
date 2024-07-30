@@ -20,36 +20,42 @@ jobs:
         run: swift build -v
 
       - name: Run tests with coverage
-        run: swift test --enable-code-coverage
+        run: xcodebuild test -scheme SwiftNetworker -destination 'platform=iOS Simulator,name=iPhone 11,OS=latest' -enableCodeCoverage YES -testPlan SwiftNetworker.xctestplan -resultBundlePath TestResults
 
-      - name: Install Slather
-        run: gem install slather
+      - name: Verify TestResults
+        run: ls -alh TestResults.xcresult
 
-      - name: Generate code coverage report with Slather
+      - name: Install llvm-cov
+        run: brew install llvm
+
+      - name: Generate code coverage report
         run: |
           mkdir -p coverage
-          slather coverage --build-directory .build/debug --output-directory coverage
+          llvm-profdata merge -sparse TestResults.xcresult/coverage.profdata -o coverage/coverage.profdata
+          llvm-cov show \
+            .build/debug/SwiftNetworkerPackageTests.xctest \
+            -instr-profile=coverage/coverage.profdata \
+            -ignore-filename-regex="(Tests/.*|README\.md)" \
+            -format=html \
+            -output-dir=coverage
+
+      - name: Generate coverage summary
+        run: |
+          llvm-cov export \
+            .build/debug/SwiftNetworkerPackageTests.xctest \
+            -instr-profile=coverage/coverage.profdata \
+            -ignore-filename-regex="(Tests/.*|README\.md)" \
+            -format=json \
+            > coverage/coverage.json
 
       - name: Verify Coverage Report
-        run: cat coverage/cobertura.xml
+        run: cat coverage/coverage.json
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          file: ./coverage/cobertura.xml
+          file: ./coverage/coverage.json
           flags: unittests
           name: codecov-report
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
-
-      - name: Install jazzy
-        run: gem install jazzy
-
-      - name: Generate Documentation
-        run: jazzy --module SwiftNetworker --output docs
-
-      - name: Deploy Documentation to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          publish_dir: ./docs

@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "7D05FA25-09EB-46DF-BA4A-0002E6DA36BC",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SwiftNetworkerTests",
+        "name" : "SwiftNetworkerTests"
+      }
+    }
+  ],
+  "version" : 1
+}
